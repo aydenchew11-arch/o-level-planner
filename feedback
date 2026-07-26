@@ -1,4 +1,7 @@
-const { getStore } = require('@netlify/blobs');
+const fs = require('fs');
+const path = require('path');
+
+const DATA_FILE = path.join('/', 'tmp', 'feedback.json');
 
 const headers = {
   'Content-Type': 'application/json',
@@ -7,60 +10,67 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS'
 };
 
+function readData() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    }
+  } catch { /* ignore */ }
+  return [];
+}
+
+function writeData(data) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+}
+
 exports.handler = async (event) => {
-  // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers };
   }
 
-  const store = getStore('feedback-data');
-
-  // POST /api/feedback — submit feedback (public)
+  // POST — submit feedback (public)
   if (event.httpMethod === 'POST') {
     try {
       const { name, email, message } = JSON.parse(event.body);
       if (!message || !message.trim()) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'Message is required.' }) };
       }
-
-      const current = JSON.parse(await store.get('all', { type: 'text' }) || '[]');
-      current.push({
+      const feedbacks = readData();
+      feedbacks.push({
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         name: name?.trim() || 'Anonymous',
         email: email?.trim() || '',
         message: message.trim(),
         date: new Date().toISOString()
       });
-      await store.set('all', JSON.stringify(current));
-
+      writeData(feedbacks);
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
-    } catch (err) {
+    } catch {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal server error.' }) };
     }
   }
 
-  // GET /api/feedback — retrieve feedback (admin only)
+  // GET — retrieve feedback (admin only)
   if (event.httpMethod === 'GET') {
     const key = event.headers['x-admin-key'];
     if (key !== process.env.ADMIN_KEY) {
       return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized.' }) };
     }
     try {
-      const data = await store.get('all', { type: 'text' });
-      return { statusCode: 200, headers, body: data || '[]' };
+      return { statusCode: 200, headers, body: JSON.stringify(readData()) };
     } catch {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Could not read feedback.' }) };
     }
   }
 
-  // DELETE /api/feedback — clear all feedback (admin only)
+  // DELETE — clear all feedback (admin only)
   if (event.httpMethod === 'DELETE') {
     const key = event.headers['x-admin-key'];
     if (key !== process.env.ADMIN_KEY) {
       return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized.' }) };
     }
     try {
-      await store.set('all', '[]');
+      writeData([]);
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     } catch {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Could not clear feedback.' }) };
