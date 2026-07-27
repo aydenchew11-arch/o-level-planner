@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Countdown Planner</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+  <!-- Setup Wizard (first visit) -->
+  <div id="setup-overlay" class="overlay hidden">
+    <div class="modal setup-modal">
+      <div class="setup-header">
+        <h1>Welcome to Exam Countdown Planner</h1>
+        <p id="setup-desc">Select the national exams you are taking.</p>
+      </div>
+      <!-- Step 1: Exam Type Selection -->
+      <div id="setup-step-1">
+        <div id="setup-exam-types" class="setup-exam-types" style="margin-bottom:20px">
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="o-level" checked> GCE O-Level 2026</label>
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="na-level"> GCE NA-Level 2026</label>
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="nt-level"> GCE NT-Level 2026</label>
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="a-level"> GCE A-Level 2026</label>
+        </div>
+        <div class="setup-actions">
+          <button id="setup-next" class="btn btn-primary">Next</button>
+        </div>
+      </div>
+      <!-- Step 2: Subject Selection -->
+      <div id="setup-step-2" class="hidden" style="max-height:60vh;overflow-y:auto">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">Select the subjects you are taking for each exam. You can change these anytime in Settings, and add custom exam sets too.</p>
+        <div id="setup-subjects-container"></div>
+        <div class="setup-actions" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <button id="setup-save" class="btn btn-primary">Start Planning</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <header id="topbar">
+      <div class="topbar-left">
+        <h1 class="app-title">Exam Countdown</h1>
+      </div>
+      <div class="topbar-right">
+        <button id="btn-notifications" class="btn btn-icon" title="Enable reminders">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <button id="btn-darkmode" class="btn btn-icon" title="Toggle dark mode">
+          <svg id="dark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button id="btn-settings" class="btn btn-icon" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button id="btn-feedback" class="btn btn-icon" title="Send feedback">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button id="btn-export" class="btn btn-icon" title="Export/Import data">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section id="hero" class="hidden">
+      <div class="hero-card" id="hero-card"></div>
+    </section>
+
+    <div id="stats-bar" class="stats-bar hidden">
+      <div class="stat-item"><span class="stat-value" id="stat-exams">0</span><span class="stat-label">Exams</span></div>
+      <div class="stat-item"><span class="stat-value" id="stat-subjects">0</span><span class="stat-label">Subjects</span></div>
+      <div class="stat-item"><span class="stat-value" id="stat-days-until">--</span><span class="stat-label">Days to go</span></div>
+    </div>
+
+    <div class="controls">
+      <div class="view-tabs">
+        <button class="view-tab active" data-view="upcoming">Upcoming</button>
+        <button class="view-tab" data-view="all">All Exams</button>
+        <button class="view-tab" data-view="calendar">Calendar</button>
+        <button class="view-tab" data-view="notes">Notes</button>
+      </div>
+      <div class="controls-right">
+        <select id="filter-subject" aria-label="Filter by subject">
+          <option value="">All Subjects</option>
+        </select>
+        <select id="sort-by" aria-label="Sort by">
+          <option value="date">Sort: Date</option>
+          <option value="subject">Sort: Subject</option>
+        </select>
+        <input type="search" id="search-exams" placeholder="Search exams..." aria-label="Search exams">
+      </div>
+    </div>
+
+    <main id="main-content">
+      <div id="list-view" class="view-content active">
+        <div id="goals-section" class="goals-section hidden">
+          <div class="goals-header">
+            <h3>Study Goals</h3>
+            <button id="btn-goals-toggle" class="btn btn-small">Show</button>
+          </div>
+          <div id="goals-container" class="goals-container hidden"></div>
+        </div>
+        <div id="exam-list" class="exam-grid"></div>
+        <div id="empty-state" class="hidden">
+          <div class="empty-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3>No examinations found</h3>
+          <p>Add an exam set in Settings, or adjust your filters and subject selections.</p>
+          <button id="btn-empty-settings" class="btn btn-primary">Open Settings</button>
+        </div>
+      </div>
+
+      <div id="calendar-view" class="view-content">
+        <div class="cal-layout">
+          <div class="cal-main">
+            <div class="calendar-header">
+              <button id="cal-prev" class="btn btn-icon">&larr;</button>
+              <h2 id="cal-month-year"></h2>
+              <button id="cal-next" class="btn btn-icon">&rarr;</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+          <div class="cal-sidebar" id="cal-sidebar">
+            <div class="cal-sidebar-header">Exam Details</div>
+            <div id="cal-exam-detail" class="cal-exam-detail">
+              <p class="cal-no-selection">Click a date with exam dots to see details.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="notes-view" class="view-content">
+        <div class="notes-header">
+          <h2>My Notes</h2>
+          <p>Uploaded PDF notes for your subjects.</p>
+        </div>
+        <div id="notes-list" class="notes-list"></div>
+        <div id="notes-empty" class="hidden">
+          <p>No notes uploaded yet. Open an exam card to upload notes.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Exam Detail Modal -->
+  <div id="exam-modal" class="overlay hidden">
+    <div class="modal exam-modal">
+      <button class="modal-close btn btn-icon">&times;</button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="overlay hidden">
+    <div class="modal settings-modal">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="settings-section">
+          <h3>Your Exam Sets</h3>
+          <p class="settings-hint">Enable the exam sets you are taking. All enabled exams appear on your dashboard.</p>
+          <div id="settings-exam-sets"></div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="btn-add-exam-set" class="btn btn-secondary">+ New Custom Exam Set</button>
+            <button id="btn-import-timetable" class="btn btn-secondary">OCR Import</button>
+            <button id="btn-import-sheets" class="btn btn-secondary">Paste from Sheets</button>
+          </div>
+        </section>
+        <section class="settings-section" id="settings-subjects-section">
+          <h3>Subjects (for selected exam set)</h3>
+          <p class="settings-hint">Select the subjects and papers you are taking.</p>
+          <div id="settings-subjects"></div>
+        </section>
+        <section class="settings-section">
+          <h3>Subject Colors</h3>
+          <p class="settings-hint">Customize the colors for each subject on the calendar and cards.</p>
+          <div id="settings-colors"></div>
+        </section>
+        <section class="settings-section">
+          <h3>Study Goals</h3>
+          <p class="settings-hint">Set revision goals for each subject.</p>
+          <div id="settings-goals"></div>
+        </section>
+        <section class="settings-section">
+          <h3>Preferences</h3>
+          <label class="toggle-row">
+            <span>Dark Mode</span>
+            <input type="checkbox" id="settings-darkmode">
+            <span class="toggle-slider"></span>
+          </label>
+          <label class="toggle-row">
+            <span>Notifications</span>
+            <input type="checkbox" id="settings-notifications">
+            <span class="toggle-slider"></span>
+          </label>
+        </section>
+        <section class="settings-section">
+          <h3>Reset</h3>
+          <p class="settings-hint">Remove all data and start fresh. This cannot be undone.</p>
+          <button id="btn-wipe-data" class="btn btn-danger">Wipe All Data</button>
+        </section>
+        <div class="settings-actions">
+          <button id="settings-save" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export/Import Modal -->
+  <div id="export-modal" class="overlay hidden">
+    <div class="modal export-modal">
+      <div class="modal-header">
+        <h2>Export / Import</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="settings-section">
+          <h3>Export Configuration</h3>
+          <p>Download your settings (exam selections, colors, goals, progress, text notes) as a JSON file. Transfer this file to another device to restore your data.</p>
+          <button id="btn-do-export" class="btn btn-primary">Download JSON</button>
+        </section>
+        <section class="settings-section">
+          <h3>Import Configuration</h3>
+          <p>Upload a previously exported JSON file to restore settings on a new device.</p>
+          <input type="file" id="import-file" accept=".json" class="file-input">
+          <button id="btn-do-import" class="btn btn-secondary">Import</button>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" class="overlay hidden">
+    <div class="modal export-modal">
+      <div class="modal-header">
+        <h2>Send Feedback</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">
+          Found a bug? Have a suggestion? Your feedback is sent anonymously via Google Form.
+        </p>
+        <div id="google-form-container">
+          <p style="text-align:center;padding:12px;color:var(--text2);font-size:13px">
+            Feedback is sent anonymously via Google Form.
+          </p>
+        </div>
+        <button id="btn-feedback-open" class="btn btn-primary" style="display:block;margin:0 auto">Open Feedback Form</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCR Modal -->
+  <div id="ocr-modal" class="overlay hidden">
+    <div class="modal export-modal">
+      <div class="modal-header">
+        <h2>Import Timetable (OCR)</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">
+          Upload an image or PDF of your exam timetable. Text is extracted automatically — review and correct before saving.
+        </p>
+        <p style="font-size:13px;color:var(--danger);margin-bottom:12px;font-weight:500">
+          ⚠️ OCR is not always accurate. For best results, use Paste from Sheets instead, or enter your dates manually.
+        </p>
+        <div id="ocr-upload-area">
+          <input type="file" id="ocr-file-input" accept="image/*,.pdf" style="display:block;margin-bottom:12px;font-size:13px">
+          <button id="btn-ocr-start" class="btn btn-primary">Extract Dates</button>
+        </div>
+        <div id="ocr-status" class="hidden" style="margin:12px 0;font-size:13px;color:var(--text2)"></div>
+        <div id="ocr-results" class="hidden">
+          <h4 style="margin-bottom:8px">Extracted Entries</h4>
+          <div id="ocr-entries" style="max-height:300px;overflow-y:auto"></div>
+          <div class="settings-actions" style="border:none;padding-top:12px">
+            <button id="btn-ocr-save" class="btn btn-primary">Save as New Exam Set</button>
+            <button id="btn-ocr-cancel" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sheets Import Modal -->
+  <div id="sheets-modal" class="overlay hidden">
+    <div class="modal export-modal">
+      <div class="modal-header">
+        <h2>Paste from Excel / Google Sheets</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">
+          Copy rows from your spreadsheet and paste below. Each row should have: <strong>Date</strong>, <strong>Subject</strong>, <strong>Paper</strong> (optional), <strong>Time</strong> (optional).
+        </p>
+        <div style="background:var(--surface2);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px">
+          <strong>Example:</strong><br>
+          14 Oct 2026 &nbsp;&nbsp; English &nbsp;&nbsp; Paper 1 &nbsp;&nbsp; 13:30<br>
+          15 Oct 2026 &nbsp;&nbsp; Mathematics &nbsp;&nbsp; Paper 1 &nbsp;&nbsp; 14:00
+        </div>
+        <textarea id="sheets-paste-area" class="feedback-textarea" placeholder="Paste your exam data here..." rows="8" style="margin-bottom:12px"></textarea>
+        <div style="margin-bottom:12px">
+          <label style="font-size:14px;font-weight:500;display:block;margin-bottom:4px">Exam set name</label>
+          <input type="text" id="sheets-set-name" class="feedback-input" placeholder="e.g. My School Exams 2026">
+        </div>
+        <button id="btn-sheets-parse" class="btn btn-primary">Parse & Review</button>
+        <div id="sheets-preview" class="hidden" style="margin-top:16px">
+          <h4 style="margin-bottom:8px">Preview</h4>
+          <div id="sheets-entries" style="max-height:300px;overflow-y:auto"></div>
+          <div class="settings-actions" style="border:none;padding-top:12px">
+            <button id="btn-sheets-save" class="btn btn-primary">Save Exam Set</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Exam Set Modal -->
+  <div id="exam-set-modal" class="overlay hidden">
+    <div class="modal export-modal">
+      <div class="modal-header">
+        <h2 id="exam-set-modal-title">New Custom Exam Set</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">Create your own exam set for school tests or other examinations. All subjects you add will be selected by default.</p>
+        <div class="detail-field">
+          <div class="detail-label">Exam Set Name</div>
+          <input type="text" id="exam-set-name" class="feedback-input" placeholder="e.g. Sec 3 EOY Exams 2026" style="margin-top:4px">
+        </div>
+        <div class="detail-field">
+          <div class="detail-label">Subjects &amp; Dates</div>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Add one row per subject/paper.</p>
+          <div id="exam-set-entries">
+            <div class="exam-set-row">
+              <input type="text" class="es-subject" placeholder="Subject" style="flex:2">
+              <input type="text" class="es-paper" placeholder="Paper" style="flex:1">
+              <input type="date" class="es-date" style="flex:1">
+              <input type="time" class="es-time" placeholder="Time" style="flex:0.7">
+              <button class="btn btn-small btn-danger es-remove">&times;</button>
+            </div>
+          </div>
+          <button id="btn-add-entry" class="btn btn-small btn-secondary" style="margin-top:8px">+ Add Row</button>
+        </div>
+        <div class="settings-actions" style="border:none;padding-top:16px">
+          <button id="btn-save-exam-set" class="btn btn-primary">Save Exam Set</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden"></div>
+
+  <!-- Notification Banner -->
+  <div id="notification-banner" class="hidden">
+    <span id="notif-text">Enable notifications to get exam reminders.</span>
+    <button id="notif-close" class="btn btn-small">&times;</button>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
