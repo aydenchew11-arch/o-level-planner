@@ -5,7 +5,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===== GOOGLE FORM =====
-const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform'; // Replace with your Google Form link
+const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfh9PlBT3YuABzFivtPLhDPe8j8LgwT0j3oV1fPKxIb-vLUrw/viewform'; // Replace with your Google Form link
 
 // ===== SUBJECT CATEGORIES =====
 const CATEGORIES = {
