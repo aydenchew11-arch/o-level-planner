@@ -63,7 +63,8 @@ const NT_COLORS = {
 
 // ===== A-LEVEL DATA =====
 const ALEVEL_CATEGORIES = {
-  'H1 Compulsory': ['General Paper', 'H1 Mother Tongue Language'],
+  'H1 Compulsory': ['General Paper'],
+  'H1 Mother Tongue': ['H1 Chinese (MTL)', 'H1 Malay (MTL)', 'H1 Tamil (MTL)'],
   'H1 Mathematics & Sciences': ['H1 Mathematics', 'H1 Chemistry', 'H1 Physics', 'H1 Biology'],
   'H1 Humanities & Arts': ['H1 Economics', 'H1 History', 'H1 Geography', 'H1 Literature in English', 'H1 Art'],
   'H2 Mathematics & Sciences': ['H2 Mathematics', 'H2 Further Mathematics', 'H2 Physics', 'H2 Chemistry', 'H2 Biology'],
@@ -76,7 +77,7 @@ const ALEVEL_CATEGORIES = {
   'Religious Knowledge': ['Islamic Theology', 'Islamic Law']
 };
 const ALEVEL_COLORS = {
-  'General Paper': '#2563eb', 'H1 Mother Tongue Language': '#dc2626',
+  'General Paper': '#2563eb', 'H1 Chinese (MTL)': '#dc2626', 'H1 Malay (MTL)': '#ea580c', 'H1 Tamil (MTL)': '#c2410c',
   'H1 Mathematics': '#059669', 'H1 Chemistry': '#d97706', 'H1 Physics': '#4f46e5', 'H1 Biology': '#db2777',
   'H1 Economics': '#0891b2', 'H1 History': '#0ea5e9', 'H1 Geography': '#14b8a6', 'H1 Literature in English': '#7c3aed', 'H1 Art': '#e11d48',
   'H2 Mathematics': '#059669', 'H2 Further Mathematics': '#047857', 'H2 Physics': '#4f46e5', 'H2 Chemistry': '#d97706', 'H2 Biology': '#db2777',
@@ -231,18 +232,18 @@ const ALEVEL_PAPERS = [
   { id:'al-chib-p1', subject:'Chinese B', code:'8611', paper:'Paper 1', date:'2026-06-02', startTime:'08:00', endTime:'08:50', mode:'Written', duration:'50 min', notes:'Mid-Year MTL B paper.' },
   { id:'al-malb-p1', subject:'Malay B', code:'8613', paper:'Paper 1', date:'2026-06-02', startTime:'08:00', endTime:'08:50', mode:'Written', duration:'50 min', notes:'Mid-Year MTL B paper.' },
   { id:'al-tamb-p1', subject:'Tamil B', code:'8614', paper:'Paper 1', date:'2026-06-02', startTime:'08:00', endTime:'08:50', mode:'Written', duration:'50 min', notes:'Mid-Year MTL B paper.' },
-  { id:'al-chi-p1', subject:'H1 Mother Tongue Language', code:'8655', paper:'Paper 1', paperName:'Chinese Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
-  { id:'al-mal-p1', subject:'H1 Mother Tongue Language', code:'8656', paper:'Paper 1', paperName:'Malay Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
-  { id:'al-tam-p1', subject:'H1 Mother Tongue Language', code:'8657', paper:'Paper 1', paperName:'Tamil Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
+  { id:'al-chi-p1', subject:'H1 Chinese (MTL)', code:'8655', paper:'Paper 1', paperName:'Chinese Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
+  { id:'al-mal-p1', subject:'H1 Malay (MTL)', code:'8656', paper:'Paper 1', paperName:'Malay Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
+  { id:'al-tam-p1', subject:'H1 Tamil (MTL)', code:'8657', paper:'Paper 1', paperName:'Tamil Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
   // MTL LC - Jul 7
-  { id:'al-chi-lc', subject:'H1 Mother Tongue Language', code:'8655', paper:'Listening Comprehension', paperName:'Chinese', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
-  { id:'al-mal-lc', subject:'H1 Mother Tongue Language', code:'8656', paper:'Listening Comprehension', paperName:'Malay', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
-  { id:'al-tam-lc', subject:'H1 Mother Tongue Language', code:'8657', paper:'Listening Comprehension', paperName:'Tamil', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
+  { id:'al-chi-lc', subject:'H1 Chinese (MTL)', code:'8655', paper:'Listening Comprehension', paperName:'Chinese', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
+  { id:'al-mal-lc', subject:'H1 Malay (MTL)', code:'8656', paper:'Listening Comprehension', paperName:'Malay', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
+  { id:'al-tam-lc', subject:'H1 Tamil (MTL)', code:'8657', paper:'Listening Comprehension', paperName:'Tamil', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
   { id:'al-chib-lc', subject:'Chinese B', code:'8611', paper:'Listening Comprehension', date:'2026-07-07', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
   // MTL Oral - Jul 8-16
-  { id:'al-chi-oral', subject:'H1 Mother Tongue Language', code:'8655', paper:'Oral', paperName:'Chinese', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
-  { id:'al-mal-oral', subject:'H1 Mother Tongue Language', code:'8656', paper:'Oral', paperName:'Malay', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
-  { id:'al-tam-oral', subject:'H1 Mother Tongue Language', code:'8657', paper:'Oral', paperName:'Tamil', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
+  { id:'al-chi-oral', subject:'H1 Chinese (MTL)', code:'8655', paper:'Oral', paperName:'Chinese', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
+  { id:'al-mal-oral', subject:'H1 Malay (MTL)', code:'8656', paper:'Oral', paperName:'Malay', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
+  { id:'al-tam-oral', subject:'H1 Tamil (MTL)', code:'8657', paper:'Oral', paperName:'Tamil', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
   // H2 Science Practicals - Oct 14, 19, 22
   { id:'al-chem-prac', subject:'H2 Chemistry', code:'9729', paper:'Paper 4', paperName:'Practical', date:'2026-10-14', startTime:'08:00', endTime:'17:00', mode:'Practical', duration:'2 h 30 min', notes:'Conducted in 3 shifts. Check your assigned shift.' },
   { id:'al-phy-prac', subject:'H2 Physics', code:'9749', paper:'Paper 4', paperName:'Practical', date:'2026-10-19', startTime:'08:00', endTime:'17:00', mode:'Practical', duration:'2 h 30 min', notes:'Conducted in 3 shifts. Check your assigned shift.' },
@@ -547,7 +548,7 @@ function createCustomExamSet(name, papers) {
   };
   state.activeSetId = id;
   saveState();
-  refreshExamSwitcher();
+  
   refreshAll();
   showToast('Exam set "' + name + '" created with ' + papers.length + ' entries.');
 }
@@ -557,7 +558,7 @@ function deleteExamSet(id) {
   if (!set) return;
   if (set.type === 'builtin') {
     set.enabled = !set.enabled;
-    saveState(); refreshExamSwitcher(); refreshAll();
+    saveState();  refreshAll();
     showToast(set.enabled ? 'Enabled: ' + set.name : 'Disabled: ' + set.name);
     return;
   }
@@ -567,7 +568,7 @@ function deleteExamSet(id) {
     const keys = Object.keys(state.examSets);
     state.activeSetId = keys[0] || '';
   }
-  saveState(); refreshExamSwitcher(); refreshAll();
+  saveState();  refreshAll();
 }
 
 function switchExamSet(id) {
@@ -645,12 +646,15 @@ function findExamSetForPaper(paperId) {
 function renderExamCard(exam) {
   const days = daysUntilExam(exam), status = getExamStatus(exam);
   const setId = findExamSetForPaper(exam.id);
+  const set = setId ? state.examSets[setId] : null;
+  const setName = set ? set.name : '';
   const color = getSubjectColor(exam.subject, setId);
   const timeStr = exam.startTime ? formatTime(exam.startTime) + (exam.endTime ? ' - ' + formatTime(exam.endTime) : '') : '';
   const modeTag = exam.mode !== 'Written' ? `<span style="font-size:11px;color:var(--text2);background:var(--surface2);padding:1px 6px;border-radius:4px;margin-left:6px">${exam.mode}</span>` : '';
   const hasNotes = notesCache.some(n => n.examId === exam.id || n.subject === exam.subject);
   const setNote = setId ? getSetNotes(setId)[exam.id] || '' : '';
-  return `<div class="exam-card status-${status}" data-id="${exam.id}"><div class="exam-card-accent" style="background:${color}"></div><div class="exam-card-header"><div class="exam-subject"><span class="exam-subject-dot" style="background:${color}"></span>${exam.subject}${modeTag}</div>${getStatusBadge(status)}</div><div class="exam-paper">${exam.paper}${exam.paperName ? ' &mdash; ' + exam.paperName : ''}</div><div class="exam-date">${formatDate(exam.date)}${timeStr ? ' &middot; ' + timeStr : ''}</div>${getCountdownHTML(exam, days)}${getTrafficHTML(exam.id, setId ? getSetProgress(setId) : {})}${setNote ? `<div class="note-indicator has-notes">📝 ${setNote.slice(0, 50)}${setNote.length > 50 ? '...' : ''}</div>` : ''}${hasNotes ? `<div class="note-indicator has-notes">📎 Notes attached</div>` : ''}</div>`;
+  const setBadge = setName ? `<span class="exam-set-badge">${setName}</span>` : '';
+  return `<div class="exam-card status-${status}" data-id="${exam.id}"><div class="exam-card-accent" style="background:${color}"></div><div class="exam-card-header"><div class="exam-subject"><span class="exam-subject-dot" style="background:${color}"></span>${exam.subject}${modeTag}${setBadge}</div>${getStatusBadge(status)}</div><div class="exam-paper">${exam.paper}${exam.paperName ? ' &mdash; ' + exam.paperName : ''}</div><div class="exam-date">${formatDate(exam.date)}${timeStr ? ' &middot; ' + timeStr : ''}</div>${getCountdownHTML(exam, days)}${getTrafficHTML(exam.id, setId ? getSetProgress(setId) : {})}${setNote ? `<div class="note-indicator has-notes">📝 ${setNote.slice(0, 50)}${setNote.length > 50 ? '...' : ''}</div>` : ''}${hasNotes ? `<div class="note-indicator has-notes">📎 Notes attached</div>` : ''}</div>`;
 }
 
 function renderGoalsList(setId) {
@@ -660,7 +664,7 @@ function renderGoalsList(setId) {
   section.classList.remove('hidden');
   const subjSet = [...new Set(selected.map(e => e.subject))].sort();
   const set = state.examSets[setId];
-  const isCollapsed = set ? set.goalsCollapsed : true;
+  const isCollapsed = set ? (set.goalsCollapsed !== false) : true;
   toggleBtn.textContent = isCollapsed ? 'Show' : 'Hide';
   if (isCollapsed) { container.classList.add('hidden'); container.innerHTML = ''; return; }
   container.classList.remove('hidden');
@@ -762,7 +766,7 @@ function renderSettings() {
       if (entries.length) groupsByCat[cat] = entries.join('');
     });
     subjContainer.innerHTML = '<div class="setup-select-all"><button id="settings-select-all-btn" class="btn btn-secondary">Select All</button></div>';
-    ['Languages','Mathematics','Sciences','Humanities','Arts & Electives','Applied Subjects','Business & Tech','H1 Compulsory','H1 Mathematics & Sciences','H1 Humanities & Arts','H2 Mathematics & Sciences','H2 Humanities','H2 Languages & Arts','H2 Computing & Business','H3 Subjects','Knowledge & Inquiry','Foreign Languages','Religious Knowledge','Others'].forEach(cat => { if (groupsByCat[cat]) subjContainer.innerHTML += `<div class="setup-category"><div class="setup-category-title">${cat}</div>${groupsByCat[cat]}</div>`; });
+    ['Languages','Mathematics','Sciences','Humanities','Arts & Electives','Applied Subjects','Business & Tech','H1 Compulsory','H1 Mother Tongue','H1 Mathematics & Sciences','H1 Humanities & Arts','H2 Mathematics & Sciences','H2 Humanities','H2 Languages & Arts','H2 Computing & Business','H3 Subjects','Knowledge & Inquiry','Foreign Languages','Religious Knowledge','Others'].forEach(cat => { if (groupsByCat[cat]) subjContainer.innerHTML += `<div class="setup-category"><div class="setup-category-title">${cat}</div>${groupsByCat[cat]}</div>`; });
     subjContainer.querySelectorAll('.subject-check').forEach(cb => { cb.addEventListener('change', () => { cb.closest('.setup-group').querySelectorAll('.paper-check').forEach(p => p.checked = cb.checked); }); });
     subjContainer.querySelectorAll('.paper-check').forEach(cb => { cb.addEventListener('change', () => { const g = cb.closest('.setup-group'); g.querySelector('.subject-check').checked = g.querySelectorAll('.paper-check').length === g.querySelectorAll('.paper-check:checked').length; }); });
     document.getElementById('settings-select-all-btn')?.addEventListener('click', () => { const allChecked = [...document.querySelectorAll('#settings-subjects .paper-check')].every(c => c.checked); document.querySelectorAll('#settings-subjects .paper-check').forEach(c => c.checked = !allChecked); document.querySelectorAll('#settings-subjects .subject-check').forEach(c => { c.checked = c.closest('.setup-group').querySelectorAll('.paper-check').length === c.closest('.setup-group').querySelectorAll('.paper-check:checked').length; }); });
@@ -879,7 +883,7 @@ function importData(file) {
       }
       if (data.darkMode !== undefined) state.darkMode = data.darkMode;
       if (data.notifications !== undefined) state.notifications = data.notifications;
-      saveState(); refreshExamSwitcher(); refreshAll(); showToast('Configuration imported successfully!');
+      saveState();  refreshAll(); showToast('Configuration imported successfully!');
     } catch { showToast('Invalid file format.', 4000); }
   };
   reader.readAsText(file);
@@ -896,18 +900,13 @@ function updateTitle() {
 
 function showToast(msg, duration) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.remove('hidden'); clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.add('hidden'), duration || 3000); }
 
-function refreshExamSwitcher() {
-  const sel = document.getElementById('exam-switcher');
-  sel.innerHTML = Object.entries(state.examSets).map(([id, set]) => `<option value="${id}"${id === state.activeSetId ? ' selected' : ''}>${set.name}${set.enabled === false ? ' (disabled)' : ''}</option>`).join('');
-}
-
 function refreshAll() {
   document.documentElement.setAttribute('data-theme', state.darkMode ? 'dark' : 'light');
   const darkCb = document.getElementById('settings-darkmode');
   const notifCb = document.getElementById('settings-notifications');
   if (darkCb) darkCb.checked = state.darkMode;
   if (notifCb) notifCb.checked = state.notifications;
-  refreshExamSwitcher();
+  
   const filterSel = document.getElementById('filter-subject');
   const currentVal = filterSel.value;
   const subjSet = new Set(getSelectedExams().map(e => e.subject));
@@ -1166,11 +1165,10 @@ function parseSheetData(text) {
   document.getElementById('settings-notifications').addEventListener('change', () => { state.notifications = document.getElementById('settings-notifications').checked; saveState(); });
   document.getElementById('notif-close').addEventListener('click', () => { document.getElementById('notification-banner').classList.add('hidden'); });
 
-  // Exam switcher
-  document.getElementById('exam-switcher').addEventListener('change', (e) => { switchExamSet(e.target.value); });
+  // Exam switcher removed — exam set source shown on each card
 
   // Goals toggle
-  document.getElementById('btn-goals-toggle').addEventListener('click', () => { const set = state.examSets[state.activeSetId]; if (set) { set.goalsCollapsed = !set.goalsCollapsed; saveState(); renderGoalsList(state.activeSetId); } });
+  document.getElementById('btn-goals-toggle').addEventListener('click', () => { const set = state.examSets[state.activeSetId]; if (set) { if (set.goalsCollapsed === undefined) set.goalsCollapsed = false; else set.goalsCollapsed = !set.goalsCollapsed; saveState(); renderGoalsList(state.activeSetId); } });
 
   // Filter / sort / search
   document.getElementById('filter-subject').addEventListener('change', () => refreshAll());
@@ -1276,3 +1274,4 @@ function parseSheetData(text) {
     refreshAll();
   }
 })();
+
