@@ -14,15 +14,27 @@
     <div class="modal setup-modal">
       <div class="setup-header">
         <h1>Welcome to Exam Countdown Planner</h1>
-        <p>Select the national exams you are taking. You can add custom exam sets later in Settings.</p>
+        <p id="setup-desc">Select the national exams you are taking.</p>
       </div>
-      <div id="setup-exam-types" class="setup-exam-types" style="margin-bottom:20px">
-        <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="o-level" checked> GCE O-Level 2026</label>
-        <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="n-level"> GCE N-Level 2026</label>
-        <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="a-level"> GCE A-Level 2026</label>
+      <!-- Step 1: Exam Type Selection -->
+      <div id="setup-step-1">
+        <div id="setup-exam-types" class="setup-exam-types" style="margin-bottom:20px">
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="o-level" checked> GCE O-Level 2026</label>
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="na-level"> GCE NA-Level 2026</label>
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="nt-level"> GCE NT-Level 2026</label>
+          <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="a-level"> GCE A-Level 2026</label>
+        </div>
+        <div class="setup-actions">
+          <button id="setup-next" class="btn btn-primary">Next</button>
+        </div>
       </div>
-      <div class="setup-actions">
-        <button id="setup-save" class="btn btn-primary">Start Planning</button>
+      <!-- Step 2: Subject Selection -->
+      <div id="setup-step-2" class="hidden" style="max-height:60vh;overflow-y:auto">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">Select the subjects you are taking for each exam. You can also add custom exam sets later in Settings.</p>
+        <div id="setup-subjects-container"></div>
+        <div class="setup-actions" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <button id="setup-save" class="btn btn-primary">Start Planning</button>
+        </div>
       </div>
     </div>
   </div>

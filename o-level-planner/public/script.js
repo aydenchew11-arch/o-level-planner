@@ -24,6 +24,327 @@ const DEFAULT_SUBJECT_COLORS = {
 
 const COLOR_PALETTE = ['#2563eb','#dc2626','#059669','#d97706','#7c3aed','#db2777','#0891b2','#ea580c','#4f46e5','#ca8a04','#14b8a6','#e11d48','#0284c7','#84cc16','#f97316','#8b5cf6','#06b6d4','#f43f5e','#0ea5e9','#a855f7','#10b981','#eab308','#6366f1','#ec4899'];
 
+// ===== NA-LEVEL (Normal Academic) DATA =====
+const NA_CATEGORIES = {
+  'Languages': ['English Language', 'Chinese', 'Malay', 'Tamil', 'Basic Chinese', 'Basic Malay', 'Basic Tamil', 'Bengali', 'Gujarati', 'Hindi', 'Panjabi', 'Urdu'],
+  'Mathematics': ['Mathematics', 'Additional Mathematics'],
+  'Sciences': ['Science (Phy/Chem)', 'Science (Phy/Bio)', 'Science (Chem/Bio)'],
+  'Humanities': ['Social Studies', 'Humanities (SS, Geog)', 'Humanities (SS, Hist)', 'Humanities (SS, Lit)', 'Geography', 'History', 'Literature in English'],
+  'Business & Tech': ['Principles of Accounts', 'Elements of Business Skills'],
+  'Arts & Electives': ['Art', 'Music', 'Nutrition & Food Science', 'Design & Technology']
+};
+const NA_COLORS = {
+  'English Language': '#2563eb', 'Chinese': '#dc2626', 'Malay': '#ea580c', 'Tamil': '#c2410c',
+  'Basic Chinese': '#991b1b', 'Basic Malay': '#b45309', 'Basic Tamil': '#92400e',
+  'Bengali': '#7c3aed', 'Gujarati': '#6d28d9', 'Hindi': '#a21caf', 'Panjabi': '#86198f', 'Urdu': '#9d174d',
+  'Mathematics': '#059669', 'Additional Mathematics': '#047857',
+  'Science (Phy/Chem)': '#d97706', 'Science (Phy/Bio)': '#e11d48', 'Science (Chem/Bio)': '#9333ea',
+  'Social Studies': '#0891b2', 'Humanities (SS, Geog)': '#0d9488', 'Humanities (SS, Hist)': '#0284c7',
+  'Humanities (SS, Lit)': '#6d28d9', 'Geography': '#14b8a6', 'History': '#0ea5e9', 'Literature in English': '#7c3aed',
+  'Principles of Accounts': '#ca8a04', 'Elements of Business Skills': '#f97316',
+  'Art': '#e11d48', 'Music': '#c026d3', 'Nutrition & Food Science': '#84cc16', 'Design & Technology': '#ca8a04'
+};
+
+// ===== NT-LEVEL (Normal Technical) DATA =====
+const NT_CATEGORIES = {
+  'Languages': ['English Language (Syll T)', 'Basic Chinese', 'Basic Malay', 'Basic Tamil'],
+  'Mathematics': ['Mathematics (Syll T)'],
+  'Sciences': ['Science (Syll T)'],
+  'Applied Subjects': ['Computer Applications', 'Design & Technology', 'Mobile Robotics', 'Smart Electrical Technology', 'Retail Operations'],
+  'Arts': ['Art', 'Music']
+};
+const NT_COLORS = {
+  'English Language (Syll T)': '#2563eb', 'Basic Chinese': '#991b1b', 'Basic Malay': '#b45309', 'Basic Tamil': '#92400e',
+  'Mathematics (Syll T)': '#059669', 'Science (Syll T)': '#d97706',
+  'Computer Applications': '#0891b2', 'Design & Technology': '#ca8a04',
+  'Mobile Robotics': '#7c3aed', 'Smart Electrical Technology': '#f97316', 'Retail Operations': '#14b8a6',
+  'Art': '#e11d48', 'Music': '#c026d3'
+};
+
+// ===== A-LEVEL DATA =====
+const ALEVEL_CATEGORIES = {
+  'H1 Compulsory': ['General Paper', 'H1 Mother Tongue Language'],
+  'H1 Mathematics & Sciences': ['H1 Mathematics', 'H1 Chemistry', 'H1 Physics', 'H1 Biology'],
+  'H1 Humanities & Arts': ['H1 Economics', 'H1 History', 'H1 Geography', 'H1 Literature in English', 'H1 Art'],
+  'H2 Mathematics & Sciences': ['H2 Mathematics', 'H2 Further Mathematics', 'H2 Physics', 'H2 Chemistry', 'H2 Biology'],
+  'H2 Humanities': ['H2 Economics', 'H2 History', 'H2 Geography', 'H2 Literature in English', 'H2 English Language & Linguistics'],
+  'H2 Languages & Arts': ['H2 Chinese Language & Literature', 'H2 Malay Language & Literature', 'H2 Tamil Language & Literature', 'H2 Art', 'H2 Music', 'H2 Theatre Studies & Drama'],
+  'H2 Computing & Business': ['H2 Computing', 'H2 Principles of Accounting', 'H2 Management of Business', 'H2 China Studies in English', 'H2 China Studies in Chinese', 'H2 Translation (Chinese)'],
+  'H3 Subjects': ['H3 Mathematics', 'H3 Physics', 'H3 Chemistry', 'H3 Biology', 'H3 Economics', 'H3 History', 'H3 Geography', 'H3 Literature'],
+  'Knowledge & Inquiry': ['Knowledge & Inquiry'],
+  'Foreign Languages': ['French', 'German', 'Japanese', 'Spanish', 'Arabic', 'Chinese B', 'Malay B', 'Tamil B', 'Bengali', 'Gujarati', 'Hindi', 'Panjabi', 'Urdu'],
+  'Religious Knowledge': ['Islamic Theology', 'Islamic Law']
+};
+const ALEVEL_COLORS = {
+  'General Paper': '#2563eb', 'H1 Mother Tongue Language': '#dc2626',
+  'H1 Mathematics': '#059669', 'H1 Chemistry': '#d97706', 'H1 Physics': '#4f46e5', 'H1 Biology': '#db2777',
+  'H1 Economics': '#0891b2', 'H1 History': '#0ea5e9', 'H1 Geography': '#14b8a6', 'H1 Literature in English': '#7c3aed', 'H1 Art': '#e11d48',
+  'H2 Mathematics': '#059669', 'H2 Further Mathematics': '#047857', 'H2 Physics': '#4f46e5', 'H2 Chemistry': '#d97706', 'H2 Biology': '#db2777',
+  'H2 Economics': '#0891b2', 'H2 History': '#0ea5e9', 'H2 Geography': '#14b8a6', 'H2 Literature in English': '#7c3aed',
+  'H2 English Language & Linguistics': '#6d28d9',
+  'H2 Chinese Language & Literature': '#dc2626', 'H2 Malay Language & Literature': '#ea580c', 'H2 Tamil Language & Literature': '#c2410c',
+  'H2 Art': '#e11d48', 'H2 Music': '#c026d3', 'H2 Theatre Studies & Drama': '#f97316',
+  'H2 Computing': '#0891b2', 'H2 Principles of Accounting': '#ca8a04', 'H2 Management of Business': '#f97316',
+  'H2 China Studies in English': '#0284c7', 'H2 China Studies in Chinese': '#024b7c', 'H2 Translation (Chinese)': '#991b1b',
+  'H3 Mathematics': '#059669', 'H3 Physics': '#4f46e5', 'H3 Chemistry': '#d97706', 'H3 Biology': '#db2777',
+  'H3 Economics': '#0891b2', 'H3 History': '#0ea5e9', 'H3 Geography': '#14b8a6', 'H3 Literature': '#7c3aed',
+  'Knowledge & Inquiry': '#8b5cf6',
+  'French': '#ec4899', 'German': '#f43f5e', 'Japanese': '#a21caf', 'Spanish': '#f97316', 'Arabic': '#059669',
+  'Chinese B': '#dc2626', 'Malay B': '#ea580c', 'Tamil B': '#c2410c',
+  'Bengali': '#7c3aed', 'Gujarati': '#6d28d9', 'Hindi': '#a21caf', 'Panjabi': '#86198f', 'Urdu': '#9d174d',
+  'Islamic Theology': '#10b981', 'Islamic Law': '#059669'
+};
+
+const NA_PAPERS = [
+  // Oral - Jul 13-17
+  { id:'na-eng-oral', subject:'English Language', code:'1190', paper:'Oral', paperName:'Oral Examination', date:'2026-07-13', startTime:'14:15', endTime:null, mode:'Oral', duration:'20 min', notes:'Candidates take turns on exam day (13-17 Jul). Check your scheduled slot.' },
+  { id:'na-chi-oral', subject:'Chinese', code:'1196', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'08:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day (14-17 Jul).' },
+  { id:'na-mal-oral', subject:'Malay', code:'1197', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'08:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day (14-17 Jul).' },
+  { id:'na-tam-oral', subject:'Tamil', code:'1198', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'08:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day (14-17 Jul).' },
+  { id:'na-bch-oral', subject:'Basic Chinese', code:'1202', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day.' },
+  { id:'na-bma-oral', subject:'Basic Malay', code:'1203', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day.' },
+  { id:'na-bta-oral', subject:'Basic Tamil', code:'1204', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day.' },
+  // Written - Sep 14
+  { id:'na-eng-p1', subject:'English Language', code:'1190', paper:'Paper 1', paperName:'Writing', date:'2026-09-14', startTime:'08:00', endTime:'09:50', mode:'Written', duration:'1 h 50 min', notes:'' },
+  { id:'na-eng-p2', subject:'English Language', code:'1190', paper:'Paper 2', paperName:'Comprehension', date:'2026-09-14', startTime:'10:35', endTime:'12:25', mode:'Written', duration:'1 h 50 min', notes:'' },
+  // Humanities (SS combo) - Sep 16
+  { id:'na-ssg-p1', subject:'Humanities (SS, Geog)', code:'2125', paper:'Paper 1', paperName:'Social Studies & Geography', date:'2026-09-16', startTime:'08:00', endTime:'09:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  { id:'na-ssh-p1', subject:'Humanities (SS, Hist)', code:'2126', paper:'Paper 1', paperName:'Social Studies & History', date:'2026-09-16', startTime:'08:00', endTime:'09:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  { id:'na-ssl-p1', subject:'Humanities (SS, Lit)', code:'2127', paper:'Paper 1', paperName:'Social Studies & Literature', date:'2026-09-16', startTime:'08:00', endTime:'09:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  // Languages written - Sep 17
+  { id:'na-chi-p1', subject:'Chinese', code:'1196', paper:'Paper 1', paperName:'Writing', date:'2026-09-17', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'na-chi-p2', subject:'Chinese', code:'1196', paper:'Paper 2', paperName:'Language Use & Comprehension', date:'2026-09-17', startTime:'10:45', endTime:'12:15', mode:'Written', duration:'1 h 30 min', notes:'' },
+  { id:'na-mal-p1', subject:'Malay', code:'1197', paper:'Paper 1', paperName:'Writing', date:'2026-09-17', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'na-mal-p2', subject:'Malay', code:'1197', paper:'Paper 2', paperName:'Language Use & Comprehension', date:'2026-09-17', startTime:'10:45', endTime:'12:15', mode:'Written', duration:'1 h 30 min', notes:'' },
+  { id:'na-tam-p1', subject:'Tamil', code:'1198', paper:'Paper 1', paperName:'Writing', date:'2026-09-17', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'na-tam-p2', subject:'Tamil', code:'1198', paper:'Paper 2', paperName:'Language Use & Comprehension', date:'2026-09-17', startTime:'10:45', endTime:'12:15', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // Listening - Sep 15
+  { id:'na-eng-lc', subject:'English Language', code:'1190', paper:'Listening Comprehension', date:'2026-09-15', startTime:'14:00', endTime:'14:45', mode:'Listening', duration:'45 min', notes:'Candidates seated 30 min before start.' },
+  { id:'na-bch-lc', subject:'Basic Chinese', code:'1202', paper:'Listening Comprehension', date:'2026-09-15', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  { id:'na-bma-lc', subject:'Basic Malay', code:'1203', paper:'Listening Comprehension', date:'2026-09-15', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  { id:'na-bta-lc', subject:'Basic Tamil', code:'1204', paper:'Listening Comprehension', date:'2026-09-15', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  // Listening - Sep 16
+  { id:'na-chi-lc', subject:'Chinese', code:'1196', paper:'Listening Comprehension', date:'2026-09-16', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  { id:'na-mal-lc', subject:'Malay', code:'1197', paper:'Listening Comprehension', date:'2026-09-16', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  { id:'na-tam-lc', subject:'Tamil', code:'1198', paper:'Listening Comprehension', date:'2026-09-16', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  // Basic languages written - Sep 22
+  { id:'na-bch-p1', subject:'Basic Chinese', code:'1202', paper:'Paper 1', date:'2026-09-22', startTime:'08:00', endTime:'08:30', mode:'Written', duration:'30 min', notes:'' },
+  { id:'na-bch-p2', subject:'Basic Chinese', code:'1202', paper:'Paper 2', date:'2026-09-22', startTime:'09:15', endTime:'09:55', mode:'Written', duration:'40 min', notes:'' },
+  { id:'na-bma-p1', subject:'Basic Malay', code:'1203', paper:'Paper 1', date:'2026-09-22', startTime:'08:00', endTime:'08:30', mode:'Written', duration:'30 min', notes:'' },
+  { id:'na-bma-p2', subject:'Basic Malay', code:'1203', paper:'Paper 2', date:'2026-09-22', startTime:'09:15', endTime:'09:55', mode:'Written', duration:'40 min', notes:'' },
+  { id:'na-bta-p1', subject:'Basic Tamil', code:'1204', paper:'Paper 1', date:'2026-09-22', startTime:'08:00', endTime:'08:30', mode:'Written', duration:'30 min', notes:'' },
+  { id:'na-bta-p2', subject:'Basic Tamil', code:'1204', paper:'Paper 2', date:'2026-09-22', startTime:'09:15', endTime:'09:55', mode:'Written', duration:'40 min', notes:'' },
+  // History - Sep 21, Sep 23
+  { id:'na-his-p1', subject:'History', code:'2195', paper:'Paper 1', date:'2026-09-21', startTime:'14:00', endTime:'15:50', mode:'Written', duration:'1 h 50 min', notes:'' },
+  { id:'na-his-p2', subject:'History', code:'2195', paper:'Paper 2', date:'2026-09-23', startTime:'14:00', endTime:'15:50', mode:'Written', duration:'1 h 50 min', notes:'' },
+  // Mathematics - Oct 5, Oct 7
+  { id:'na-math-p1', subject:'Mathematics', code:'4045', paper:'Paper 1', date:'2026-10-05', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'na-math-p2', subject:'Mathematics', code:'4045', paper:'Paper 2', date:'2026-10-07', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  // Additional Mathematics - Oct 6, Oct 9
+  { id:'na-amath-p1', subject:'Additional Mathematics', code:'4051', paper:'Paper 1', date:'2026-10-06', startTime:'14:00', endTime:'15:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  { id:'na-amath-p2', subject:'Additional Mathematics', code:'4051', paper:'Paper 2', date:'2026-10-09', startTime:'08:00', endTime:'09:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  // Science (Phy/Chem) - Oct 6, Oct 8
+  { id:'na-scpc-p1', subject:'Science (Phy/Chem)', code:'5105', paper:'Paper 1', paperName:'Physics Component', date:'2026-10-06', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-scpc-p2', subject:'Science (Phy/Chem)', code:'5105', paper:'Paper 2', paperName:'Chemistry Component', date:'2026-10-06', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-scpc-p3', subject:'Science (Phy/Chem)', code:'5105', paper:'Paper 3', paperName:'Physics Component', date:'2026-10-08', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-scpc-p4', subject:'Science (Phy/Chem)', code:'5105', paper:'Paper 4', paperName:'Chemistry Component', date:'2026-10-08', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  // Science (Phy/Bio) - Oct 6, Oct 12
+  { id:'na-spb-p1', subject:'Science (Phy/Bio)', code:'5106', paper:'Paper 1', paperName:'Physics Component', date:'2026-10-06', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-spb-p2', subject:'Science (Phy/Bio)', code:'5106', paper:'Paper 2', paperName:'Biology Component', date:'2026-10-06', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-spb-p5', subject:'Science (Phy/Bio)', code:'5106', paper:'Paper 5', paperName:'Physics Component', date:'2026-10-12', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-spb-p6', subject:'Science (Phy/Bio)', code:'5106', paper:'Paper 6', paperName:'Biology Component', date:'2026-10-12', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  // Science (Chem/Bio) - Oct 8
+  { id:'na-scb-p3', subject:'Science (Chem/Bio)', code:'5107', paper:'Paper 3', paperName:'Chemistry Component', date:'2026-10-08', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'na-scb-p4', subject:'Science (Chem/Bio)', code:'5107', paper:'Paper 4', paperName:'Biology Component', date:'2026-10-08', startTime:'08:00', endTime:'09:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  // Humanities Paper 2 - Oct 5
+  { id:'na-ssg-p2', subject:'Humanities (SS, Geog)', code:'2125', paper:'Paper 2', paperName:'Social Studies & Geography', date:'2026-10-05', startTime:'14:00', endTime:'15:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  { id:'na-ssh-p2', subject:'Humanities (SS, Hist)', code:'2126', paper:'Paper 2', paperName:'Social Studies & History', date:'2026-10-05', startTime:'14:00', endTime:'15:50', mode:'Written', duration:'1 h 50 min', notes:'' },
+  // Geography - Oct 8, Oct 13
+  { id:'na-geog-p1', subject:'Geography', code:'2246', paper:'Paper 1', date:'2026-10-08', startTime:'14:00', endTime:'15:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  { id:'na-geog-p2', subject:'Geography', code:'2246', paper:'Paper 2', date:'2026-10-13', startTime:'08:00', endTime:'09:45', mode:'Written', duration:'1 h 45 min', notes:'' },
+  // Literature in English - Oct 8, Oct 13
+  { id:'na-lit-p2', subject:'Literature in English', code:'2197', paper:'Paper 2', date:'2026-10-08', startTime:'14:00', endTime:'15:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  { id:'na-lit-p3', subject:'Literature in English', code:'2197', paper:'Paper 3', date:'2026-10-13', startTime:'14:00', endTime:'15:40', mode:'Written', duration:'1 h 40 min', notes:'' },
+  // POA - Oct 7, Oct 9
+  { id:'na-poa-p1', subject:'Principles of Accounts', code:'7086', paper:'Paper 1', date:'2026-10-07', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  { id:'na-poa-p2', subject:'Principles of Accounts', code:'7086', paper:'Paper 2', date:'2026-10-09', startTime:'14:30', endTime:'16:30', mode:'Written', duration:'2 h', notes:'' },
+  // EBS - Oct 7
+  { id:'na-ebs-p1', subject:'Elements of Business Skills', code:'7088', paper:'Paper 1', date:'2026-10-07', startTime:'14:00', endTime:'15:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // Art - Sep 21
+  { id:'na-art-p1', subject:'Art', code:'6015', paper:'Paper 1', paperName:'Drawing & Painting', date:'2026-09-21', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // Music - Sep 21
+  { id:'na-mus-p1', subject:'Music', code:'6065', paper:'Paper 1', date:'2026-09-21', startTime:'08:00', endTime:'09:00', mode:'Written', duration:'1 h', notes:'' },
+  // NFS - Oct 13
+  { id:'na-nfs-p1', subject:'Nutrition & Food Science', code:'6077', paper:'Paper 1', date:'2026-10-13', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // D&T - Oct 13
+  { id:'na-dt-p1', subject:'Design & Technology', code:'6059', paper:'Paper 1', date:'2026-10-13', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+];
+
+const NT_PAPERS = [
+  // Oral - Jul 13-17
+  { id:'nt-eng-oral', subject:'English Language (Syll T)', code:'1195', paper:'Oral', paperName:'Oral Examination', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'20 min', notes:'Candidates take turns on exam day (14-17 Jul). Check your scheduled slot.' },
+  { id:'nt-bch-oral', subject:'Basic Chinese', code:'1202', paper:'Oral', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day.' },
+  { id:'nt-bma-oral', subject:'Basic Malay', code:'1203', paper:'Oral', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day.' },
+  { id:'nt-bta-oral', subject:'Basic Tamil', code:'1204', paper:'Oral', date:'2026-07-14', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns on exam day.' },
+  // English T Papers - Sep 14
+  { id:'nt-engt-p1', subject:'English Language (Syll T)', code:'1195', paper:'Paper 1', date:'2026-09-14', startTime:'08:00', endTime:'09:20', mode:'Written', duration:'1 h 20 min', notes:'' },
+  { id:'nt-engt-p2', subject:'English Language (Syll T)', code:'1195', paper:'Paper 2', date:'2026-09-14', startTime:'10:35', endTime:'11:55', mode:'Written', duration:'1 h 20 min', notes:'' },
+  // Science T - Sep 17, Sep 21
+  { id:'nt-sci-p1', subject:'Science (Syll T)', code:'5165', paper:'Paper 1', date:'2026-09-17', startTime:'14:30', endTime:'15:45', mode:'Written', duration:'1 h 15 min', notes:'' },
+  { id:'nt-sci-p2', subject:'Science (Syll T)', code:'5165', paper:'Paper 2', date:'2026-09-21', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // Computer Applications Practical - Sep 18, Sep 24
+  { id:'nt-cpa-prac1', subject:'Computer Applications', code:'7018', paper:'Practical', date:'2026-09-18', startTime:'08:00', endTime:'09:30', mode:'Practical', duration:'1 h 30 min', notes:'' },
+  { id:'nt-cpa-prac2', subject:'Computer Applications', code:'7018', paper:'Practical', date:'2026-09-24', startTime:'08:00', endTime:'09:30', mode:'Practical', duration:'1 h 30 min', notes:'' },
+  // Listening - Sep 15, Sep 16
+  { id:'nt-engt-lc', subject:'English Language (Syll T)', code:'1195', paper:'Listening Comprehension', date:'2026-09-16', startTime:'14:00', endTime:'14:45', mode:'Listening', duration:'45 min', notes:'Candidates seated 30 min before start.' },
+  { id:'nt-bch-lc', subject:'Basic Chinese', code:'1202', paper:'Listening Comprehension', date:'2026-09-15', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  { id:'nt-bma-lc', subject:'Basic Malay', code:'1203', paper:'Listening Comprehension', date:'2026-09-15', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  { id:'nt-bta-lc', subject:'Basic Tamil', code:'1204', paper:'Listening Comprehension', date:'2026-09-15', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  // Basic languages written - Sep 22
+  { id:'nt-bch-p1', subject:'Basic Chinese', code:'1202', paper:'Paper 1', date:'2026-09-22', startTime:'08:00', endTime:'08:30', mode:'Written', duration:'30 min', notes:'' },
+  { id:'nt-bch-p2', subject:'Basic Chinese', code:'1202', paper:'Paper 2', date:'2026-09-22', startTime:'09:15', endTime:'09:55', mode:'Written', duration:'40 min', notes:'' },
+  { id:'nt-bma-p1', subject:'Basic Malay', code:'1203', paper:'Paper 1', date:'2026-09-22', startTime:'08:00', endTime:'08:30', mode:'Written', duration:'30 min', notes:'' },
+  { id:'nt-bma-p2', subject:'Basic Malay', code:'1203', paper:'Paper 2', date:'2026-09-22', startTime:'09:15', endTime:'09:55', mode:'Written', duration:'40 min', notes:'' },
+  { id:'nt-bta-p1', subject:'Basic Tamil', code:'1204', paper:'Paper 1', date:'2026-09-22', startTime:'08:00', endTime:'08:30', mode:'Written', duration:'30 min', notes:'' },
+  { id:'nt-bta-p2', subject:'Basic Tamil', code:'1204', paper:'Paper 2', date:'2026-09-22', startTime:'09:15', endTime:'09:55', mode:'Written', duration:'40 min', notes:'' },
+  // Mathematics T - Oct 6, Oct 9
+  { id:'nt-math-p1', subject:'Mathematics (Syll T)', code:'4046', paper:'Paper 1', date:'2026-10-06', startTime:'14:00', endTime:'15:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  { id:'nt-math-p2', subject:'Mathematics (Syll T)', code:'4046', paper:'Paper 2', date:'2026-10-09', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // Computer Applications Written - Oct 8
+  { id:'nt-cpa-p3', subject:'Computer Applications', code:'7018', paper:'Paper 1', date:'2026-10-08', startTime:'14:00', endTime:'15:15', mode:'Written', duration:'1 h 15 min', notes:'' },
+  // D&T T - Oct 13
+  { id:'nt-dt-p1', subject:'Design & Technology', code:'6060', paper:'Paper 1', date:'2026-10-13', startTime:'08:00', endTime:'09:00', mode:'Written', duration:'1 h', notes:'' },
+  // Mobile Robotics Written - Oct 5
+  { id:'nt-mr-p1', subject:'Mobile Robotics', code:'A101', paper:'Paper 1', date:'2026-10-05', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // Smart Electrical Technology Written - Oct 5
+  { id:'nt-set-p1', subject:'Smart Electrical Technology', code:'A201', paper:'Paper 1', date:'2026-10-05', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // Retail Operations Written - Oct 5
+  { id:'nt-ro-p1', subject:'Retail Operations', code:'A301', paper:'Paper 1', date:'2026-10-05', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // Art - Sep 21
+  { id:'nt-art-p1', subject:'Art', code:'6015', paper:'Paper 1', date:'2026-09-21', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // Music - Sep 21
+  { id:'nt-mus-p1', subject:'Music', code:'6065', paper:'Paper 1', date:'2026-09-21', startTime:'08:00', endTime:'09:00', mode:'Written', duration:'1 h', notes:'' },
+];
+
+const ALEVEL_PAPERS = [
+  // Mid-Year Mother Tongue - Jun 2
+  { id:'al-chib-p1', subject:'Chinese B', code:'8611', paper:'Paper 1', date:'2026-06-02', startTime:'08:00', endTime:'08:50', mode:'Written', duration:'50 min', notes:'Mid-Year MTL B paper.' },
+  { id:'al-malb-p1', subject:'Malay B', code:'8613', paper:'Paper 1', date:'2026-06-02', startTime:'08:00', endTime:'08:50', mode:'Written', duration:'50 min', notes:'Mid-Year MTL B paper.' },
+  { id:'al-tamb-p1', subject:'Tamil B', code:'8614', paper:'Paper 1', date:'2026-06-02', startTime:'08:00', endTime:'08:50', mode:'Written', duration:'50 min', notes:'Mid-Year MTL B paper.' },
+  { id:'al-chi-p1', subject:'H1 Mother Tongue Language', code:'8655', paper:'Paper 1', paperName:'Chinese Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
+  { id:'al-mal-p1', subject:'H1 Mother Tongue Language', code:'8656', paper:'Paper 1', paperName:'Malay Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
+  { id:'al-tam-p1', subject:'H1 Mother Tongue Language', code:'8657', paper:'Paper 1', paperName:'Tamil Language', date:'2026-06-02', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h', notes:'Mid-Year MTL paper.' },
+  // MTL LC - Jul 7
+  { id:'al-chi-lc', subject:'H1 Mother Tongue Language', code:'8655', paper:'Listening Comprehension', paperName:'Chinese', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
+  { id:'al-mal-lc', subject:'H1 Mother Tongue Language', code:'8656', paper:'Listening Comprehension', paperName:'Malay', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
+  { id:'al-tam-lc', subject:'H1 Mother Tongue Language', code:'8657', paper:'Listening Comprehension', paperName:'Tamil', date:'2026-07-07', startTime:'14:00', endTime:'14:30', mode:'Listening', duration:'30 min', notes:'Seated 30 min before start.' },
+  { id:'al-chib-lc', subject:'Chinese B', code:'8611', paper:'Listening Comprehension', date:'2026-07-07', startTime:'16:00', endTime:'16:30', mode:'Listening', duration:'30 min', notes:'' },
+  // MTL Oral - Jul 8-16
+  { id:'al-chi-oral', subject:'H1 Mother Tongue Language', code:'8655', paper:'Oral', paperName:'Chinese', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
+  { id:'al-mal-oral', subject:'H1 Mother Tongue Language', code:'8656', paper:'Oral', paperName:'Malay', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
+  { id:'al-tam-oral', subject:'H1 Mother Tongue Language', code:'8657', paper:'Oral', paperName:'Tamil', date:'2026-07-08', startTime:'14:15', endTime:null, mode:'Oral', duration:'15 min', notes:'Candidates take turns (8-16 Jul).' },
+  // H2 Science Practicals - Oct 14, 19, 22
+  { id:'al-chem-prac', subject:'H2 Chemistry', code:'9729', paper:'Paper 4', paperName:'Practical', date:'2026-10-14', startTime:'08:00', endTime:'17:00', mode:'Practical', duration:'2 h 30 min', notes:'Conducted in 3 shifts. Check your assigned shift.' },
+  { id:'al-phy-prac', subject:'H2 Physics', code:'9749', paper:'Paper 4', paperName:'Practical', date:'2026-10-19', startTime:'08:00', endTime:'17:00', mode:'Practical', duration:'2 h 30 min', notes:'Conducted in 3 shifts. Check your assigned shift.' },
+  { id:'al-bio-prac', subject:'H2 Biology', code:'9744', paper:'Paper 4', paperName:'Practical', date:'2026-10-22', startTime:'08:00', endTime:'17:00', mode:'Practical', duration:'2 h 30 min', notes:'Conducted in 3 shifts. Check your assigned shift.' },
+  // GP - Nov 2, Nov 4
+  { id:'al-gp-p1', subject:'General Paper', code:'8881', paper:'Paper 1', paperName:'Essay', date:'2026-11-02', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  { id:'al-gp-p2', subject:'General Paper', code:'8881', paper:'Paper 2', paperName:'Comprehension', date:'2026-11-04', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  // H2 Mathematics - Nov 3, Nov 6
+  { id:'al-h2math-p1', subject:'H2 Mathematics', code:'9758', paper:'Paper 1', date:'2026-11-03', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-h2math-p2', subject:'H2 Mathematics', code:'9758', paper:'Paper 2', date:'2026-11-06', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // H1 Mathematics - Nov 3
+  { id:'al-h1math-p1', subject:'H1 Mathematics', code:'8865', paper:'Paper 1', date:'2026-11-03', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Economics - Nov 5
+  { id:'al-h2econ-p1', subject:'H2 Economics', code:'8843', paper:'Paper 1', date:'2026-11-05', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H1 Economics - Nov 5 (P1), Nov 16 (P2)
+  { id:'al-h1econ-p1', subject:'H1 Economics', code:'9570', paper:'Paper 1', date:'2026-11-05', startTime:'14:00', endTime:'16:30', mode:'Written', duration:'2 h 30 min', notes:'' },
+  { id:'al-h1econ-p2', subject:'H1 Economics', code:'9570', paper:'Paper 2', date:'2026-11-16', startTime:'08:00', endTime:'10:30', mode:'Written', duration:'2 h 30 min', notes:'' },
+  // H2 Chemistry - Nov 10 (P2), Nov 12 (P3), Nov 23 (P1)
+  { id:'al-h2chem-p2', subject:'H2 Chemistry', code:'9729', paper:'Paper 2', date:'2026-11-10', startTime:'14:00', endTime:'16:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h2chem-p3', subject:'H2 Chemistry', code:'9729', paper:'Paper 3', date:'2026-11-12', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h2chem-p1', subject:'H2 Chemistry', code:'9729', paper:'Paper 1', date:'2026-11-23', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // H1 Chemistry - Nov 10 (P2), Nov 23 (P1)
+  { id:'al-h1chem-p2', subject:'H1 Chemistry', code:'8873', paper:'Paper 2', date:'2026-11-10', startTime:'14:00', endTime:'16:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h1chem-p1', subject:'H1 Chemistry', code:'8873', paper:'Paper 1', date:'2026-11-23', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // H2 Physics - Nov 13 (P2), Nov 17 (P3), Nov 27 (P1)
+  { id:'al-h2phy-p2', subject:'H2 Physics', code:'9749', paper:'Paper 2', date:'2026-11-13', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h2phy-p3', subject:'H2 Physics', code:'9749', paper:'Paper 3', date:'2026-11-17', startTime:'14:00', endTime:'16:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h2phy-p1', subject:'H2 Physics', code:'9749', paper:'Paper 1', date:'2026-11-27', startTime:'08:00', endTime:'09:00', mode:'Written', duration:'1 h', notes:'' },
+  // H1 Physics - Nov 13 (P2), Nov 27 (P1)
+  { id:'al-h1phy-p2', subject:'H1 Physics', code:'8867', paper:'Paper 2', date:'2026-11-13', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h1phy-p1', subject:'H1 Physics', code:'8867', paper:'Paper 1', date:'2026-11-27', startTime:'08:00', endTime:'09:00', mode:'Written', duration:'1 h', notes:'' },
+  // H2 Biology - Nov 18 (P2), Nov 20 (P3), Nov 26 (P1)
+  { id:'al-h2bio-p2', subject:'H2 Biology', code:'9744', paper:'Paper 2', date:'2026-11-18', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h2bio-p3', subject:'H2 Biology', code:'9744', paper:'Paper 3', date:'2026-11-20', startTime:'14:30', endTime:'16:30', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h2bio-p1', subject:'H2 Biology', code:'9744', paper:'Paper 1', date:'2026-11-26', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // H1 Biology - Nov 18 (P2), Nov 26 (P1)
+  { id:'al-h1bio-p2', subject:'H1 Biology', code:'8876', paper:'Paper 2', date:'2026-11-18', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-h1bio-p1', subject:'H1 Biology', code:'8876', paper:'Paper 1', date:'2026-11-26', startTime:'14:00', endTime:'15:00', mode:'Written', duration:'1 h', notes:'' },
+  // H2 Literature - Nov 4 (P1), Nov 11 (P2)
+  { id:'al-h2lit-p1', subject:'H2 Literature in English', code:'9539', paper:'Paper 1', date:'2026-11-04', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-h2lit-p2', subject:'H2 Literature in English', code:'9539', paper:'Paper 2', date:'2026-11-11', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // H1 Literature - Nov 4
+  { id:'al-h1lit-p1', subject:'H1 Literature in English', code:'8841', paper:'Paper 1', date:'2026-11-04', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 History - Nov 17 (P1), Nov 19 (P2)
+  { id:'al-h2his-p1', subject:'H2 History', code:'9174', paper:'Paper 1', date:'2026-11-17', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-h2his-p2', subject:'H2 History', code:'9174', paper:'Paper 2', date:'2026-11-19', startTime:'10:00', endTime:'11:45', mode:'Written', duration:'1 h 45 min', notes:'Revised timing may apply.' },
+  // H1 History - Nov 17
+  { id:'al-h1his-p1', subject:'H1 History', code:'8838', paper:'Paper 1', date:'2026-11-17', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Geography - Nov 23 (P1), Nov 25 (P2)
+  { id:'al-h2geog-p1', subject:'H2 Geography', code:'9173', paper:'Paper 1', date:'2026-11-23', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-h2geog-p2', subject:'H2 Geography', code:'9173', paper:'Paper 2', date:'2026-11-25', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H1 Geography - Nov 23
+  { id:'al-h1geog-p1', subject:'H1 Geography', code:'8834', paper:'Paper 1', date:'2026-11-23', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Computing - Oct 7 (Practical), Nov 11
+  { id:'al-comp-prac', subject:'H2 Computing', code:'9569', paper:'Paper 3', paperName:'Practical', date:'2026-10-07', startTime:'08:00', endTime:'11:00', mode:'Practical', duration:'3 h', notes:'' },
+  { id:'al-comp-p1', subject:'H2 Computing', code:'9569', paper:'Paper 1', date:'2026-11-11', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Further Mathematics - Nov 16, Nov 18
+  { id:'al-fmath-p1', subject:'H2 Further Mathematics', code:'9649', paper:'Paper 1', date:'2026-11-16', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-fmath-p2', subject:'H2 Further Mathematics', code:'9649', paper:'Paper 2', date:'2026-11-18', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 English Language & Linguistics - Nov 16, Nov 18
+  { id:'al-ell-p1', subject:'H2 English Language & Linguistics', code:'9518', paper:'Paper 1', date:'2026-11-16', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-ell-p2', subject:'H2 English Language & Linguistics', code:'9518', paper:'Paper 2', date:'2026-11-18', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  // H2 Principles of Accounting - Nov 10, Nov 24
+  { id:'al-poa-p1', subject:'H2 Principles of Accounting', code:'9737', paper:'Paper 1', date:'2026-11-10', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-poa-p2', subject:'H2 Principles of Accounting', code:'9737', paper:'Paper 2', date:'2026-11-24', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Management of Business - Nov 13
+  { id:'al-mob-p1', subject:'H2 Management of Business', code:'9738', paper:'Paper 1', date:'2026-11-13', startTime:'14:30', endTime:'17:30', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Art - Nov 2
+  { id:'al-art-p1', subject:'H2 Art', code:'9755', paper:'Paper 1', date:'2026-11-02', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Music - Sep 28-30 (Practical), Nov 2
+  { id:'al-mus-prac', subject:'H2 Music', code:'9753', paper:'Practical', date:'2026-09-28', startTime:'08:00', endTime:null, mode:'Practical', duration:'30 min', notes:'Days 1-3 (28-30 Sep). Candidates take turns.' },
+  { id:'al-mus-p1', subject:'H2 Music', code:'9753', paper:'Paper 1', date:'2026-11-02', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Theatre Studies & Drama - Jul 13-20 (Practical), Nov 3
+  { id:'al-tsd-prac', subject:'H2 Theatre Studies & Drama', code:'9519', paper:'Practical', date:'2026-07-13', startTime:'08:00', endTime:null, mode:'Practical', duration:'2 h', notes:'Days 1-6 (13-20 Jul).' },
+  { id:'al-tsd-p1', subject:'H2 Theatre Studies & Drama', code:'9519', paper:'Paper 1', date:'2026-11-03', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  // H2 Chinese/Malay/Tamil Language & Literature - Oct 26, Nov 5, Nov 12, Nov 19
+  { id:'al-h2chi-26', subject:'H2 Chinese Language & Literature', code:'9571', paper:'Paper 1', date:'2026-10-26', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h 15 min', notes:'' },
+  { id:'al-h2chi-5', subject:'H2 Chinese Language & Literature', code:'9571', paper:'Paper 2', date:'2026-11-05', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 h 30 min', notes:'' },
+  { id:'al-h2chi-12', subject:'H2 Chinese Language & Literature', code:'9571', paper:'Paper 3', date:'2026-11-12', startTime:'14:00', endTime:'14:50', mode:'Written', duration:'50 min', notes:'' },
+  { id:'al-h2chi-19', subject:'H2 Chinese Language & Literature', code:'9571', paper:'Paper 4', date:'2026-11-19', startTime:'08:00', endTime:'11:00', mode:'Written', duration:'3 h', notes:'' },
+  // Knowledge & Inquiry - Nov 3, Nov 6
+  { id:'al-ki-p1', subject:'Knowledge & Inquiry', code:'9559', paper:'Paper 1', date:'2026-11-03', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-ki-p2', subject:'Knowledge & Inquiry', code:'9559', paper:'Paper 2', date:'2026-11-06', startTime:'14:30', endTime:'17:30', mode:'Written', duration:'3 h', notes:'' },
+  // Foreign Languages
+  { id:'al-fr-oral', subject:'French', code:'9555', paper:'Oral', date:'2026-09-23', startTime:'14:15', endTime:null, mode:'Oral', duration:'20 min', notes:'Candidates take turns (23-25 Sep).' },
+  { id:'al-fr-p1', subject:'French', code:'9555', paper:'Paper 1', date:'2026-09-30', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-fr-lc', subject:'French', code:'9555', paper:'Listening Comprehension', date:'2026-10-23', startTime:'08:00', endTime:'09:00', mode:'Listening', duration:'1 h', notes:'' },
+  { id:'al-de-oral', subject:'German', code:'9556', paper:'Oral', date:'2026-09-23', startTime:'14:15', endTime:null, mode:'Oral', duration:'20 min', notes:'' },
+  { id:'al-de-p1', subject:'German', code:'9556', paper:'Paper 1', date:'2026-09-30', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-de-lc', subject:'German', code:'9556', paper:'Listening Comprehension', date:'2026-11-02', startTime:'08:00', endTime:'09:00', mode:'Listening', duration:'1 h', notes:'' },
+  { id:'al-ja-oral', subject:'Japanese', code:'9557', paper:'Oral', date:'2026-09-23', startTime:'14:15', endTime:null, mode:'Oral', duration:'20 min', notes:'' },
+  { id:'al-ja-p1', subject:'Japanese', code:'9557', paper:'Paper 1', date:'2026-09-30', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 h', notes:'' },
+  { id:'al-ja-lc', subject:'Japanese', code:'9557', paper:'Listening Comprehension', date:'2026-10-23', startTime:'10:00', endTime:'11:00', mode:'Listening', duration:'1 h', notes:'' },
+  // H3 Subjects (selected)
+  { id:'al-h3math-p1', subject:'H3 Mathematics', code:'9820', paper:'Paper 1', date:'2026-11-24', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-h3chem-p1', subject:'H3 Chemistry', code:'9813', paper:'Paper 1', date:'2026-11-26', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h 15 min', notes:'' },
+  { id:'al-h3econ-p1', subject:'H3 Economics', code:'9809', paper:'Paper 1', date:'2026-11-26', startTime:'08:00', endTime:'11:15', mode:'Written', duration:'3 h 15 min', notes:'' },
+  // Islamic Theology & Law
+  { id:'al-islam-p1', subject:'Islamic Theology', code:'9907', paper:'Paper 1', date:'2026-11-02', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+  { id:'al-islam-p2', subject:'Islamic Theology', code:'9907', paper:'Paper 2', date:'2026-11-03', startTime:'14:00', endTime:'17:00', mode:'Written', duration:'3 h', notes:'' },
+];
+
 // ===== BUILT-IN EXAM DATA =====
 const BUILTIN_EXAMS = {
   'o-level': { key: 'o-level', name: 'GCE O-Level 2026', categories: CATEGORIES, colors: DEFAULT_SUBJECT_COLORS, papers: [
@@ -90,19 +411,9 @@ const BUILTIN_EXAMS = {
     { id:'music-p1', subject:'Music', code:'6085', paper:'Paper 1', paperName:'Written', date:'2026-11-02', startTime:'08:00', endTime:'09:30', mode:'Written', duration:'1 hr 30 min', notes:'' },
     { id:'dt-p1', subject:'Design & Technology', code:'7059', paper:'Paper 1', paperName:'', date:'2026-11-02', startTime:'08:00', endTime:'10:00', mode:'Written', duration:'2 hr', notes:'' }
   ]},
-  'n-level': { key: 'n-level', name: 'GCE N-Level 2026', categories: {
-    'Languages': ['English Language', 'Chinese', 'Malay', 'Tamil'],
-    'Mathematics': ['Mathematics', 'Additional Mathematics'],
-    'Sciences': ['Science', 'Science (Phy/Chem)', 'Science (Chem/Bio)', 'Science (Phy/Bio)'],
-    'Humanities': ['Social Studies', 'Geography', 'History', 'Literature in English'],
-    'Applied Subjects': ['Art', 'Design & Technology', 'Food & Nutrition', 'Music', 'Drama']
-  }, colors: {}, papers: [] },
-  'a-level': { key: 'a-level', name: 'GCE A-Level 2026', categories: {
-    'H1 Subjects': ['General Paper', 'Mathematics (H1)', 'Economics (H1)', 'Geography (H1)', 'History (H1)', 'Literature (H1)', 'Art (H1)', 'Music (H1)'],
-    'H2 Subjects': ['Mathematics (H2)', 'Physics (H2)', 'Chemistry (H2)', 'Biology (H2)', 'Economics (H2)', 'Geography (H2)', 'History (H2)', 'Literature (H2)', 'Art (H2)', 'Music (H2)', 'Computing (H2)'],
-    'H3 Subjects': ['Mathematics (H3)', 'Physics (H3)', 'Chemistry (H3)', 'Biology (H3)', 'Economics (H3)'],
-    'Others': ['Project Work (H1)', 'Mother Tongue A (H1)', 'General Studies in Chinese']
-  }, colors: {}, papers: [] }
+  'na-level': { key: 'na-level', name: 'GCE NA-Level 2026', categories: NA_CATEGORIES, colors: NA_COLORS, papers: NA_PAPERS },
+  'nt-level': { key: 'nt-level', name: 'GCE NT-Level 2026', categories: NT_CATEGORIES, colors: NT_COLORS, papers: NT_PAPERS },
+  'a-level': { key: 'a-level', name: 'GCE A-Level 2026', categories: ALEVEL_CATEGORIES, colors: ALEVEL_COLORS, papers: ALEVEL_PAPERS }
 };
 
 // ===== INDEXED DB for PDF Notes =====
@@ -132,6 +443,14 @@ function loadState() {
     if (raw) {
       state = JSON.parse(raw);
       Object.keys(DEFAULTS).forEach(k => { if (state[k] === undefined) state[k] = DEFAULTS[k]; });
+      // Migrate old 'n-level' to 'na-level'
+      if (state.examSets['builtin-n-level']) {
+        state.examSets['builtin-na-level'] = state.examSets['builtin-n-level'];
+        state.examSets['builtin-na-level'].name = 'GCE NA-Level 2026';
+        state.examSets['builtin-na-level'].builtinKey = 'na-level';
+        delete state.examSets['builtin-n-level'];
+        if (state.activeSetId === 'builtin-n-level') state.activeSetId = 'builtin-na-level';
+      }
     } else { state = { ...DEFAULTS }; }
   } catch { state = { ...DEFAULTS }; }
 }
@@ -443,7 +762,7 @@ function renderSettings() {
       if (entries.length) groupsByCat[cat] = entries.join('');
     });
     subjContainer.innerHTML = '<div class="setup-select-all"><button id="settings-select-all-btn" class="btn btn-secondary">Select All</button></div>';
-    ['Languages','Mathematics','Sciences','Humanities','Arts & Electives','Applied Subjects','H1 Subjects','H2 Subjects','H3 Subjects','Others'].forEach(cat => { if (groupsByCat[cat]) subjContainer.innerHTML += `<div class="setup-category"><div class="setup-category-title">${cat}</div>${groupsByCat[cat]}</div>`; });
+    ['Languages','Mathematics','Sciences','Humanities','Arts & Electives','Applied Subjects','Business & Tech','H1 Compulsory','H1 Mathematics & Sciences','H1 Humanities & Arts','H2 Mathematics & Sciences','H2 Humanities','H2 Languages & Arts','H2 Computing & Business','H3 Subjects','Knowledge & Inquiry','Foreign Languages','Religious Knowledge','Others'].forEach(cat => { if (groupsByCat[cat]) subjContainer.innerHTML += `<div class="setup-category"><div class="setup-category-title">${cat}</div>${groupsByCat[cat]}</div>`; });
     subjContainer.querySelectorAll('.subject-check').forEach(cb => { cb.addEventListener('change', () => { cb.closest('.setup-group').querySelectorAll('.paper-check').forEach(p => p.checked = cb.checked); }); });
     subjContainer.querySelectorAll('.paper-check').forEach(cb => { cb.addEventListener('change', () => { const g = cb.closest('.setup-group'); g.querySelector('.subject-check').checked = g.querySelectorAll('.paper-check').length === g.querySelectorAll('.paper-check:checked').length; }); });
     document.getElementById('settings-select-all-btn')?.addEventListener('click', () => { const allChecked = [...document.querySelectorAll('#settings-subjects .paper-check')].every(c => c.checked); document.querySelectorAll('#settings-subjects .paper-check').forEach(c => c.checked = !allChecked); document.querySelectorAll('#settings-subjects .subject-check').forEach(c => { c.checked = c.closest('.setup-group').querySelectorAll('.paper-check').length === c.closest('.setup-group').querySelectorAll('.paper-check:checked').length; }); });
@@ -715,26 +1034,83 @@ function parseSheetData(text) {
 (async () => {
   loadState();
 
-  // First visit — show setup wizard
+  // First visit — show setup wizard (multi-step)
   if (state.firstVisit) {
     document.getElementById('setup-overlay').classList.remove('hidden');
+
+    // Step 1: Exam type selection -> Step 2: Subject selection
+    document.getElementById('setup-next').addEventListener('click', () => {
+      const checked = [...document.querySelectorAll('.setup-type-cb:checked')].map(cb => cb.value);
+      if (!checked.length) { showToast('Select at least one exam type.'); return; }
+      ensureBuiltinExams(checked);
+      document.getElementById('setup-step-1').classList.add('hidden');
+      document.getElementById('setup-step-2').classList.remove('hidden');
+      document.getElementById('setup-desc').textContent = 'Select your subjects for each exam.';
+      // Render subject categories for all checked exam sets
+      const container = document.getElementById('setup-subjects-container');
+      let html = '';
+      checked.forEach(key => {
+        const builtin = BUILTIN_EXAMS[key];
+        if (!builtin) return;
+        html += `<h3 style="margin:16px 0 8px;font-size:15px">${builtin.name}</h3>`;
+        html += `<p class="settings-hint" style="margin-bottom:8px">Check the subjects you are taking.</p>`;
+        Object.entries(builtin.categories).forEach(([cat, subjects]) => {
+          const allPapers = builtin.papers;
+          const catSubjects = subjects.filter(s => allPapers.some(p => p.subject === s));
+          if (!catSubjects.length) return;
+          html += `<div class="setup-category"><div class="setup-category-title">${cat}</div>`;
+          catSubjects.forEach(s => {
+            const pts = allPapers.filter(p => p.subject === s);
+            if (!pts.length) { html += `<div class="setup-group" style="padding:6px 14px"><label style="font-weight:600;font-size:14px">${s}</label></div>`; return; }
+            html += `<div class="setup-group" data-subject="${s}"><div class="setup-group-header"><input type="checkbox" class="subject-check"><label>${s}</label></div><div class="setup-papers">${pts.filter(p => p.id).map(p => `<div class="setup-paper"><input type="checkbox" class="paper-check" data-id="${p.id}" data-key="${key}"><label>${p.paper}${p.paperName && p.paperName !== p.paper ? ' &mdash; ' + p.paperName : ''}</label></div>`).join('')}</div></div>`;
+          });
+          html += `</div>`;
+        });
+      });
+      html += `<p style="font-size:13px;color:var(--text2);margin-top:16px;padding:12px;background:var(--surface2);border-radius:8px">You can also add your own custom exam sets (e.g. school tests, mock exams) later in <strong>Settings</strong>.</p>`;
+      container.innerHTML = html;
+      // Wire up subject/parent checkboxes
+      container.querySelectorAll('.subject-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+          cb.closest('.setup-group').querySelectorAll('.paper-check').forEach(p => p.checked = cb.checked);
+        });
+      });
+      container.querySelectorAll('.paper-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const g = cb.closest('.setup-group');
+          g.querySelector('.subject-check').checked = g.querySelectorAll('.paper-check').length === g.querySelectorAll('.paper-check:checked').length;
+        });
+      });
+    });
+
     document.getElementById('setup-save').addEventListener('click', () => {
       const checked = [...document.querySelectorAll('.setup-type-cb:checked')].map(cb => cb.value);
-      ensureBuiltinExams(checked);
-      state.firstVisit = false;
-      if (!state.activeSetId && checked.length) state.activeSetId = 'builtin-' + checked[0];
-      if (!state.activeSetId) {
-        // Create empty custom set if nothing checked
+      if (!checked.length) {
         state.activeSetId = 'custom-default';
         state.examSets['custom-default'] = { name: 'My Exams', type: 'custom', enabled: true, papers: [], selectedIds: [], progress: {}, notes: {}, goals: {}, subjectColors: {} };
+      } else {
+        // Apply selected subject/paper IDs
+        const selectedMap = {};
+        document.querySelectorAll('#setup-subjects-container .paper-check:checked').forEach(cb => {
+          const key = cb.dataset.key;
+          if (!selectedMap[key]) selectedMap[key] = [];
+          selectedMap[key].push(cb.dataset.id);
+        });
+        Object.entries(selectedMap).forEach(([key, ids]) => {
+          const id = 'builtin-' + key;
+          if (state.examSets[id]) state.examSets[id].selectedIds = ids;
+        });
+        // Pick first checked exam as active
+        state.activeSetId = 'builtin-' + checked[0];
       }
+      state.firstVisit = false;
       saveState();
       document.getElementById('setup-overlay').classList.add('hidden');
       document.getElementById('app').classList.remove('hidden');
       refreshAll();
     });
   } else {
-    ensureBuiltinExams(['o-level', 'n-level', 'a-level']);
+    ensureBuiltinExams(['o-level', 'na-level', 'nt-level', 'a-level']);
     document.getElementById('app').classList.remove('hidden');
   }
 

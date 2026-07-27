@@ -119,6 +119,7 @@ body {
 .setup-type-option:hover { background: var(--surface); border-color: var(--primary); }
 .setup-type-option input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 .setup-actions { text-align: center; }
+#setup-step-2 { padding: 0 4px; }
 .setup-select-all { margin-bottom: 12px; text-align: right; }
 .setup-select-all .btn { font-size: 12px; padding: 4px 12px; }
 
