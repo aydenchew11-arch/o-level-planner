@@ -482,3 +482,43 @@ body {
   .exam-countdown { font-size: 22px; }
   .btn-icon { padding: 6px; }
 }
+
+/* ===== Login ===== */
+.login-modal { max-width: 420px; padding: 32px; border-radius: 16px; }
+.login-form { text-align: center; }
+.login-title { font-size: 22px; margin-bottom: 4px; }
+.login-subtitle { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
+.login-tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 16px; }
+.login-tab { flex: 1; padding: 10px; border: none; background: var(--surface); color: var(--text2); font-family: inherit; font-size: 14px; cursor: pointer; }
+.login-tab.active { background: var(--primary); color: #fff; font-weight: 600; }
+.login-input { width: 100%; padding: 10px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; background: var(--surface); color: var(--text); margin-bottom: 10px; }
+.login-input:focus { border-color: var(--primary); outline: none; }
+.login-btn { width: 100%; justify-content: center; padding: 10px; margin-bottom: 8px; }
+.login-error { color: var(--danger); font-size: 13px; margin-bottom: 10px; min-height: 20px; }
+.login-divider { display: flex; align-items: center; gap: 10px; margin: 12px 0; color: var(--text2); font-size: 12px; }
+.login-divider::before, .login-divider::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
+.login-hint { font-size: 11px; color: var(--text2); margin-top: 8px; }
+
+/* ===== Exam Switcher ===== */
+.exam-switcher { padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-size: 13px; font-family: inherit; cursor: pointer; margin-left: 8px; }
+.exam-switcher:focus { outline: none; border-color: var(--primary); }
+
+/* ===== User Menu ===== */
+.user-email { font-size: 12px; color: var(--text2); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ===== OCR ===== */
+#ocr-entries .ocr-entry { display: flex; gap: 6px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--surface2); }
+#ocr-entries .ocr-entry input { padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text); font-size: 13px; font-family: inherit; }
+#ocr-entries .ocr-entry input:focus { outline: none; border-color: var(--primary); }
+.ocr-date-input { width: 120px; }
+.ocr-subject-input { flex: 1; min-width: 80px; }
+.ocr-paper-input { width: 80px; }
+
+/* ===== Exam Set Editor ===== */
+.exam-set-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.exam-set-row input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text); font-size: 13px; font-family: inherit; }
+.exam-set-row input:focus { outline: none; border-color: var(--primary); }
+.exam-set-list { display: flex; flex-direction: column; gap: 8px; }
+.exam-set-card { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface2); border-radius: var(--radius-sm); }
+.exam-set-card span { flex: 1; font-size: 14px; }
+.exam-set-card .btn-small { padding: 2px 8px; font-size: 11px; }
