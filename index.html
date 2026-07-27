@@ -5,37 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Exam Countdown Planner</title>
   <link rel="stylesheet" href="style.css">
-  <script type="importmap">
-  {
-    "imports": {
-      "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
-    }
-  }
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-  <!-- Login Overlay -->
-  <div id="login-overlay" class="overlay">
-    <div class="modal login-modal">
-      <div class="login-form">
-        <h1 class="login-title">Exam Countdown Planner</h1>
-        <p class="login-subtitle">Sign in or create an account to sync your data across devices.</p>
-        <div id="login-tabs" class="login-tabs">
-          <button class="login-tab active" data-tab="signin">Sign In</button>
-          <button class="login-tab" data-tab="signup">Sign Up</button>
-        </div>
-        <div id="login-fields">
-          <input type="email" id="auth-email" class="login-input" placeholder="Email address" autocomplete="email">
-          <input type="password" id="auth-password" class="login-input" placeholder="Password" autocomplete="current-password">
-          <input type="password" id="auth-password-confirm" class="login-input hidden" placeholder="Confirm password" autocomplete="new-password">
-        </div>
-        <div id="login-error" class="login-error hidden"></div>
-        <button id="btn-auth" class="btn btn-primary login-btn">Sign In</button>
-        <div class="login-divider"><span>or</span></div>
-        <button id="btn-skip-login" class="btn btn-secondary login-btn">Continue without account</button>
-        <p class="login-hint">Without an account, your data is stored locally on this device only.</p>
+  <!-- Setup Wizard (first visit) -->
+  <div id="setup-overlay" class="overlay">
+    <div class="modal setup-modal">
+      <div class="setup-header">
+        <h1>Welcome to Exam Countdown Planner</h1>
+        <p>Select the national exams you are taking. You can add custom exam sets later in Settings.</p>
+      </div>
+      <div id="setup-exam-types" class="setup-exam-types" style="margin-bottom:20px">
+        <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="o-level" checked> <strong>GCE O-Level 2026</strong><br><span style="font-size:13px;color:var(--text2)">Full SEAB timetable with all subjects</span></label>
+        <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="n-level"> <strong>GCE N-Level 2026</strong><br><span style="font-size:13px;color:var(--text2)">Normal Academic / Normal Technical timetable</span></label>
+        <label class="setup-type-option"><input type="checkbox" class="setup-type-cb" value="a-level"> <strong>GCE A-Level 2026</strong><br><span style="font-size:13px;color:var(--text2)">Full H1/H2/H3 timetable</span></label>
+      </div>
+      <div class="setup-actions">
+        <button id="setup-save" class="btn btn-primary">Start Planning</button>
       </div>
     </div>
   </div>
@@ -48,8 +35,6 @@
         <select id="exam-switcher" class="exam-switcher" title="Switch exam set"></select>
       </div>
       <div class="topbar-right">
-        <span id="user-email" class="user-email hidden"></span>
-        <button id="btn-logout" class="btn btn-small hidden" title="Sign out">Sign Out</button>
         <button id="btn-notifications" class="btn btn-icon" title="Enable reminders">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </button>
@@ -68,19 +53,16 @@
       </div>
     </header>
 
-    <!-- Next Exam Hero -->
     <section id="hero" class="hidden">
       <div class="hero-card" id="hero-card"></div>
     </section>
 
-    <!-- Quick Stats Bar -->
     <div id="stats-bar" class="stats-bar hidden">
       <div class="stat-item"><span class="stat-value" id="stat-exams">0</span><span class="stat-label">Exams</span></div>
       <div class="stat-item"><span class="stat-value" id="stat-subjects">0</span><span class="stat-label">Subjects</span></div>
       <div class="stat-item"><span class="stat-value" id="stat-days-until">--</span><span class="stat-label">Days to go</span></div>
     </div>
 
-    <!-- Controls Bar -->
     <div class="controls">
       <div class="view-tabs">
         <button class="view-tab active" data-view="upcoming">Upcoming</button>
@@ -101,7 +83,6 @@
     </div>
 
     <main id="main-content">
-      <!-- Exam List View -->
       <div id="list-view" class="view-content active">
         <div id="goals-section" class="goals-section hidden">
           <div class="goals-header">
@@ -121,7 +102,6 @@
         </div>
       </div>
 
-      <!-- Calendar View -->
       <div id="calendar-view" class="view-content">
         <div class="cal-layout">
           <div class="cal-main">
@@ -141,7 +121,6 @@
         </div>
       </div>
 
-      <!-- Notes View -->
       <div id="notes-view" class="view-content">
         <div class="notes-header">
           <h2>My Notes</h2>
@@ -172,16 +151,17 @@
       </div>
       <div class="modal-body">
         <section class="settings-section">
-          <h3>Exam Set</h3>
-          <p class="settings-hint">Switch between built-in exam timetables or create a custom one.</p>
+          <h3>Your Exam Sets</h3>
+          <p class="settings-hint">Enable the exam sets you are taking. All enabled exams appear on your dashboard.</p>
           <div id="settings-exam-sets"></div>
-          <div style="margin-top:12px">
-            <button id="btn-add-exam-set" class="btn btn-secondary">+ New Exam Set</button>
-            <button id="btn-import-timetable" class="btn btn-secondary">Import Timetable (OCR)</button>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="btn-add-exam-set" class="btn btn-secondary">+ New Custom Exam Set</button>
+            <button id="btn-import-timetable" class="btn btn-secondary">OCR Import</button>
+            <button id="btn-import-sheets" class="btn btn-secondary">Paste from Sheets</button>
           </div>
         </section>
-        <section class="settings-section">
-          <h3>Your Subjects</h3>
+        <section class="settings-section" id="settings-subjects-section">
+          <h3>Subjects (for selected exam set)</h3>
           <p class="settings-hint">Select the subjects and papers you are taking.</p>
           <div id="settings-subjects"></div>
         </section>
@@ -225,12 +205,12 @@
       <div class="modal-body">
         <section class="settings-section">
           <h3>Export Configuration</h3>
-          <p>Download your settings (subject selections, colors, goals, progress) as a JSON file.</p>
+          <p>Download your settings (exam selections, colors, goals, progress, text notes) as a JSON file. Transfer this file to another device to restore your data.</p>
           <button id="btn-do-export" class="btn btn-primary">Download JSON</button>
         </section>
         <section class="settings-section">
           <h3>Import Configuration</h3>
-          <p>Upload a previously exported JSON file to restore settings.</p>
+          <p>Upload a previously exported JSON file to restore settings on a new device.</p>
           <input type="file" id="import-file" accept=".json" class="file-input">
           <button id="btn-do-import" class="btn btn-secondary">Import</button>
         </section>
@@ -238,7 +218,7 @@
     </div>
   </div>
 
-  <!-- Feedback Modal (Google Form) -->
+  <!-- Feedback Modal -->
   <div id="feedback-modal" class="overlay hidden">
     <div class="modal export-modal">
       <div class="modal-header">
@@ -251,7 +231,7 @@
         </p>
         <div id="google-form-container">
           <p style="text-align:center;padding:20px;color:var(--text2)">
-            Replace this link with your Google Form URL in the settings.
+            Replace this link with your Google Form URL in the code.
           </p>
         </div>
         <button id="btn-feedback-open" class="btn btn-primary" style="display:block;margin:0 auto">Open Feedback Form</button>
@@ -263,12 +243,15 @@
   <div id="ocr-modal" class="overlay hidden">
     <div class="modal export-modal">
       <div class="modal-header">
-        <h2>Import Timetable</h2>
+        <h2>Import Timetable (OCR)</h2>
         <button class="modal-close btn btn-icon">&times;</button>
       </div>
       <div class="modal-body">
         <p style="font-size:14px;color:var(--text2);margin-bottom:16px">
-          Upload an image or PDF of your exam timetable. The text will be extracted automatically — review and correct before saving.
+          Upload an image or PDF of your exam timetable. Text is extracted automatically — review and correct before saving.
+        </p>
+        <p style="font-size:13px;color:var(--danger);margin-bottom:12px;font-weight:500">
+          ⚠️ OCR is not always accurate. For best results, use Paste from Sheets instead, or enter your dates manually.
         </p>
         <div id="ocr-upload-area">
           <input type="file" id="ocr-file-input" accept="image/*,.pdf" style="display:block;margin-bottom:12px;font-size:13px">
@@ -287,6 +270,39 @@
     </div>
   </div>
 
+  <!-- Sheets Import Modal -->
+  <div id="sheets-modal" class="overlay hidden">
+    <div class="modal export-modal">
+      <div class="modal-header">
+        <h2>Paste from Excel / Google Sheets</h2>
+        <button class="modal-close btn btn-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">
+          Copy rows from your spreadsheet and paste below. Each row should have: <strong>Date</strong>, <strong>Subject</strong>, <strong>Paper</strong> (optional), <strong>Time</strong> (optional).
+        </p>
+        <div style="background:var(--surface2);padding:12px;border-radius:8px;margin-bottom:16px;font-size:13px">
+          <strong>Example:</strong><br>
+          14 Oct 2026 &nbsp;&nbsp; English &nbsp;&nbsp; Paper 1 &nbsp;&nbsp; 13:30<br>
+          15 Oct 2026 &nbsp;&nbsp; Mathematics &nbsp;&nbsp; Paper 1 &nbsp;&nbsp; 14:00
+        </div>
+        <textarea id="sheets-paste-area" class="feedback-textarea" placeholder="Paste your exam data here..." rows="8" style="margin-bottom:12px"></textarea>
+        <div style="margin-bottom:12px">
+          <label style="font-size:14px;font-weight:500;display:block;margin-bottom:4px">Exam set name</label>
+          <input type="text" id="sheets-set-name" class="feedback-input" placeholder="e.g. My School Exams 2026">
+        </div>
+        <button id="btn-sheets-parse" class="btn btn-primary">Parse & Review</button>
+        <div id="sheets-preview" class="hidden" style="margin-top:16px">
+          <h4 style="margin-bottom:8px">Preview</h4>
+          <div id="sheets-entries" style="max-height:300px;overflow-y:auto"></div>
+          <div class="settings-actions" style="border:none;padding-top:12px">
+            <button id="btn-sheets-save" class="btn btn-primary">Save Exam Set</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Custom Exam Set Modal -->
   <div id="exam-set-modal" class="overlay hidden">
     <div class="modal export-modal">
@@ -295,14 +311,14 @@
         <button class="modal-close btn btn-icon">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">Create your own exam set for school tests or other examinations.</p>
+        <p style="font-size:14px;color:var(--text2);margin-bottom:16px">Create your own exam set for school tests or other examinations. All subjects you add will be selected by default.</p>
         <div class="detail-field">
           <div class="detail-label">Exam Set Name</div>
           <input type="text" id="exam-set-name" class="feedback-input" placeholder="e.g. Sec 3 EOY Exams 2026" style="margin-top:4px">
         </div>
         <div class="detail-field">
           <div class="detail-label">Subjects &amp; Dates</div>
-          <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Add one row per subject/paper. You can rearrange later in Settings.</p>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Add one row per subject/paper.</p>
           <div id="exam-set-entries">
             <div class="exam-set-row">
               <input type="text" class="es-subject" placeholder="Subject" style="flex:2">
