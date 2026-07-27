@@ -1,11 +1,13 @@
+import { createClient } from '@supabase/supabase-js';
+
 // ===== SUPABASE CONFIG =====
 // Replace these with your Supabase project URL and anon key (from Supabase dashboard → Settings → API)
-const SUPABASE_URL = 'https://vnsaijurkjorgbpiemom.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuc2FpanVya2pvcmdicGllbW9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNDkyNjAsImV4cCI6MjEwMDcyNTI2MH0.GqX1pv2Fb3YM8hry0bJSBBX-pfq3upTxpLuM1LDXGNI';
-const supabase = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = 'https://your-project.supabase.co';
+const SUPABASE_ANON_KEY = 'your-anon-key';
+const supabase = (SUPABASE_URL && SUPABASE_URL !== 'https://your-project.supabase.co' && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'your-anon-key') ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 // ===== GOOGLE FORM =====
-const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfh9PlBT3YuABzFivtPLhDPe8j8LgwT0j3oV1fPKxIb-vLUrw/viewform'; // Replace with your Google Form link
+const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform'; // Replace with your Google Form link
 
 // ===== SUBJECT CATEGORIES =====
 const CATEGORIES = {
@@ -776,8 +778,8 @@ async function runOCR(file) {
     if (file.type === 'application/pdf') {
       statusEl.textContent = 'Converting PDF to image...';
       const arrayBuffer = await file.arrayBuffer();
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const page = await pdf.getPage(1);
       const viewport = page.getViewport({ scale: 2 });
       const canvas = document.createElement('canvas');
@@ -797,7 +799,7 @@ async function runOCR(file) {
     }
 
     statusEl.textContent = 'Running OCR (this may take a moment)...';
-    const { data: { text } } = await Tesseract.recognize(imageData, 'eng', { logger: m => { if (m.status === 'recognizing text') statusEl.textContent = `OCR: ${Math.round(m.progress * 100)}%`; } });
+    const { data: { text } } = await window.Tesseract.recognize(imageData, 'eng', { logger: m => { if (m.status === 'recognizing text') statusEl.textContent = `OCR: ${Math.round(m.progress * 100)}%`; } });
 
     statusEl.textContent = 'Parsing dates...';
     const lines = text.split('\n').filter(l => l.trim());
@@ -887,19 +889,15 @@ function parseExamLines(lines) {
   return results;
 }
 
-// ===== EVENT WIRING =====
-document.addEventListener('DOMContentLoaded', async () => {
+// ===== INIT =====
+(async () => {
   loadState();
-
-  // Init built-in exam sets if needed
   addBuiltinExamSets();
 
-  // Auth
+  // Check session and show login or app
   await initAuth();
-
   if (state.darkMode) document.documentElement.setAttribute('data-theme', 'dark');
 
-  // Login UI
   document.querySelectorAll('.login-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
@@ -1149,4 +1147,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initial refresh for logged-in users
   if (state.user) refreshAll();
-});
+})();
