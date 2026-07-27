@@ -119,6 +119,7 @@ async function getNoteDB(id) { const db = await openDB(); return new Promise((r,
 const GOAL_TEMPLATES = ['Complete TYS (past 5 years)', 'Review all lecture notes', 'Practice Section A questions', 'Practice Section B questions', 'Create summary mind maps', 'Do timed practice papers', 'Focus on weak topics', 'Review past mistakes', 'Memorise key formulas', 'Study with flashcards'];
 let notesCache = [];
 async function loadNotesCache() { try { notesCache = await getAllNotesDB(); } catch { notesCache = []; } }
+async function clearNotesDB() { const db = await openDB(); return new Promise((r, j) => { const tx = db.transaction(STORE_NAME, 'readwrite'); const s = tx.objectStore(STORE_NAME); const req = s.clear(); req.onsuccess = () => r(); req.onerror = () => j(req.error); }); }
 
 // ===== STATE =====
 const STORAGE_KEY = 'exam_planner_data_v2';
