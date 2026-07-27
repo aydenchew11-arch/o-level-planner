@@ -2,12 +2,12 @@ import { createClient } from '@supabase/supabase-js';
 
 // ===== SUPABASE CONFIG =====
 // Replace these with your Supabase project URL and anon key (from Supabase dashboard → Settings → API)
-const SUPABASE_URL = 'https://vnsaijurkjorgbpiemom.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuc2FpanVya2pvcmdicGllbW9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNDkyNjAsImV4cCI6MjEwMDcyNTI2MH0.GqX1pv2Fb3YM8hry0bJSBBX-pfq3upTxpLuM1LDXGNI';
+const SUPABASE_URL = 'https://your-project.supabase.co';
+const SUPABASE_ANON_KEY = 'your-anon-key';
 const supabase = (SUPABASE_URL && SUPABASE_URL !== 'https://your-project.supabase.co' && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'your-anon-key') ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 // ===== GOOGLE FORM =====
-const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfh9PlBT3YuABzFivtPLhDPe8j8LgwT0j3oV1fPKxIb-vLUrw/viewform'; // Replace with your Google Form link
+const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform'; // Replace with your Google Form link
 
 // ===== SUBJECT CATEGORIES =====
 const CATEGORIES = {
@@ -257,14 +257,20 @@ async function initAuth() {
   } catch { showAuthView(); }
 }
 
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
 async function handleAuth(email, password, isSignUp) {
   if (!supabase) { showToast('Supabase not configured. Data saved locally.'); showAppView(); return; }
   try {
     const fn = isSignUp ? supabase.auth.signUp : supabase.auth.signInWithPassword;
     const { data, error } = await fn({ email, password });
-    if (error) { document.getElementById('login-error').textContent = error.message; return; }
+    if (error) { showLoginError(error.message); return; }
     if (isSignUp && !data.session) {
-      document.getElementById('login-error').textContent = 'Check your email for the confirmation link, then sign in.';
+      showLoginError('Check your email for the confirmation link, then sign in.');
       return;
     }
     currentUser = data.user;
@@ -274,7 +280,7 @@ async function handleAuth(email, password, isSignUp) {
     saveState(false);
     showAppView();
     refreshAll();
-  } catch (e) { document.getElementById('login-error').textContent = e.message; }
+  } catch (e) { showLoginError(e.message); }
 }
 
 async function handleLogout() {
@@ -917,10 +923,10 @@ function parseExamLines(lines) {
     const isSignUp = !document.getElementById('auth-password-confirm').classList.contains('hidden');
     if (isSignUp) {
       const confirm = document.getElementById('auth-password-confirm').value;
-      if (password !== confirm) { document.getElementById('login-error').textContent = 'Passwords do not match.'; return; }
+      if (password !== confirm) { showLoginError('Passwords do not match.'); return; }
     }
-    if (!email || !password) { document.getElementById('login-error').textContent = 'Please enter email and password.'; return; }
-    if (password.length < 6) { document.getElementById('login-error').textContent = 'Password must be at least 6 characters.'; return; }
+    if (!email || !password) { showLoginError('Please enter email and password.'); return; }
+    if (password.length < 6) { showLoginError('Password must be at least 6 characters.'); return; }
     await handleAuth(email, password, isSignUp);
   });
   document.getElementById('btn-skip-login').addEventListener('click', skipLogin);
