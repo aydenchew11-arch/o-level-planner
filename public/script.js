@@ -539,15 +539,24 @@ let colorIdx = 0;
 function nextColor() { const c = COLOR_PALETTE[colorIdx % COLOR_PALETTE.length]; colorIdx++; return c; }
 
 // ===== EXAM SET MANAGEMENT =====
-function ensureBuiltinExams(keys) {
+function ensureBuiltinExams(activeKeys) {
+  const allBuiltinKeys = Object.keys(BUILTIN_EXAMS);
   let changed = false;
-  keys.forEach(key => {
+  allBuiltinKeys.forEach(key => {
     const id = 'builtin-' + key;
     if (!state.examSets[id] && BUILTIN_EXAMS[key]) {
-      state.examSets[id] = { name: BUILTIN_EXAMS[key].name, type: 'builtin', builtinKey: key, enabled: true, selectedIds: [], progress: {}, notes: {}, goals: {}, topics: {}, subjectColors: {} };
+      state.examSets[id] = { name: BUILTIN_EXAMS[key].name, type: 'builtin', builtinKey: key, enabled: false, selectedIds: [], progress: {}, notes: {}, goals: {}, topics: {}, subjectColors: {} };
       changed = true;
     }
   });
+  if (activeKeys) {
+    allBuiltinKeys.forEach(key => {
+      const id = 'builtin-' + key;
+      if (state.examSets[id]) {
+        state.examSets[id].enabled = activeKeys.includes(key);
+      }
+    });
+  }
   if (changed) saveState();
 }
 
@@ -626,11 +635,11 @@ function getPeriodProgress() {
 }
 function computeInsights() {
   const selected = getSelectedExams();
-  if (!selected.length) return { busyWeek: null, examsThisMonth: 0, upcomingCount: 0, subjectCount: 0, totalPapers: 0 };
+  if (!selected.length) return { busyWeek: null, examsThisWeek: 0, upcomingCount: 0, subjectCount: 0, totalPapers: 0 };
   const now = nowSG();
   const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-  const monthEnd = new Date(Date.UTC(now.getFullYear(), now.getMonth() + 1, 0));
-  const examsThisMonth = selected.filter(e => { const d = dateStrToSG(e.date); return d >= today && d <= monthEnd; });
+  const weekEnd = new Date(today.getTime() + 7 * 86400000);
+  const examsThisWeek = selected.filter(e => { const d = dateStrToSG(e.date); return d >= today && d <= weekEnd; });
   const weekDays = {};
   selected.filter(e => getExamStatus(e) !== 'past').forEach(e => {
     const d = dateStrToSG(e.date);
@@ -644,7 +653,7 @@ function computeInsights() {
   const subjects = new Set(selected.map(e => e.subject));
   return {
     busyWeek: maxWeek ? { week: new Date(maxWeek + 'T00:00:00'), count: maxCount } : null,
-    examsThisMonth: examsThisMonth.length,
+    examsThisWeek: examsThisWeek.length,
     upcomingCount: selected.filter(e => getExamStatus(e) !== 'past').length,
     subjectCount: subjects.size,
     totalPapers: selected.length
@@ -690,12 +699,31 @@ function renderInsights() {
   const bar = document.getElementById('insight-bar');
   if (insights.totalPapers === 0) { bar.classList.add('hidden'); return; }
   bar.classList.remove('hidden');
-  const busyHtml = insights.busyWeek ? `<div class="insight-card insight-busy"><span class="insight-value">${insights.busyWeek.count}</span><span class="insight-label">Busiest Week</span></div>` : '';
+  const busyHtml = insights.busyWeek ? `<div class="insight-card insight-busy"><span class="insight-value">${insights.busyWeek.count}</span><span class="insight-label">Peak Week</span></div>` : '';
   bar.innerHTML = `
     ${busyHtml}
-    <div class="insight-card insight-month"><span class="insight-value">${insights.examsThisMonth}</span><span class="insight-label">Exams This Month</span></div>
+    <div class="insight-card insight-month"><span class="insight-value">${insights.examsThisWeek}</span><span class="insight-label">Exams This Week</span></div>
     <div class="insight-card insight-subjects"><span class="insight-value">${insights.subjectCount}</span><span class="insight-label">Subjects</span></div>
     <div class="insight-card insight-papers"><span class="insight-value">${insights.upcomingCount}</span><span class="insight-label">Upcoming Papers</span></div>`;
+}
+
+function renderPlanWeekly() {
+  const container = document.getElementById('plan-weekly-content');
+  if (!container) return;
+  const selected = getSelectedExams().filter(e => getExamStatus(e) !== 'past');
+  const now = nowSG();
+  const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  const weekStart = new Date(today.getTime() - today.getDay() * 86400000);
+  const weekEnd = new Date(weekStart.getTime() + 6 * 86400000);
+  const weekExams = selected.filter(e => { const d = dateStrToSG(e.date); return d >= weekStart && d <= weekEnd; }).sort((a, b) => dateStrToSG(a.date) - dateStrToSG(b.date));
+  if (!weekExams.length) { container.innerHTML = '<p style="font-size:13px;color:var(--text2);text-align:center;padding:12px">No exams this week. Great time to get ahead!</p>'; return; }
+  container.innerHTML = weekExams.map(ex => {
+    const d = dateStrToSG(ex.date);
+    const dayName = d.toLocaleDateString('en-SG', { weekday:'short', timeZone:'Asia/Singapore' });
+    const color = getSubjectColor(ex.subject, findExamSetForPaper(ex.id));
+    return `<div class="plan-weekly-item" data-id="${ex.id}"><span class="plan-weekly-day">${dayName}</span><span class="plan-weekly-subj" style="color:${color}">${ex.subject}</span><span class="plan-weekly-paper">${ex.paper}</span></div>`;
+  }).join('');
+  container.querySelectorAll('.plan-weekly-item').forEach(el => { el.addEventListener('click', () => showExamDetail(el.dataset.id)); });
 }
 
 function renderDailyPlanner() {
@@ -729,7 +757,10 @@ function renderHero() {
   const seasonInfo = prog.totalDays > 0 ? `Day ${Math.min(prog.elapsedDays + 1, prog.totalDays)} of ${prog.totalDays}` : '';
   const remains = prog.remainingDays > 0 ? ` &middot; ${prog.remainingDays}d to go` : '';
   const insights = computeInsights();
-  const insightsHtml = insights.busyWeek ? `<div class="hero-insights"><span class="hero-insight-item">📊 Busiest week: <span class="hero-insight-value">${insights.busyWeek.count} papers</span></span><span class="hero-insight-item">📅 <span class="hero-insight-value">${insights.examsThisMonth}</span> exams this month</span><span class="hero-insight-item">📝 <span class="hero-insight-value">${insights.subjectCount}</span> subjects</span></div>` : '';
+  const insightsHtml = insights.busyWeek ? `<div class="hero-insights"><span class="hero-insight-item">📊 Peak: <span class="hero-insight-value">${insights.busyWeek.count} papers/week</span></span><span class="hero-insight-item">📅 <span class="hero-insight-value">${insights.examsThisWeek}</span> this week</span><span class="hero-insight-item">📝 <span class="hero-insight-value">${insights.subjectCount}</span> subjects</span></div>` : '';
+  // Dynamic banner color based on next exam's subject
+  const nextColor = getSubjectColor(next.subject, findExamSetForPaper(next.id));
+  card.style.background = `linear-gradient(135deg, ${nextColor}, ${nextColor}dd)`;
   if (status === 'past') card.innerHTML = `<div class="hero-label">All Examinations</div><div class="hero-countdown">&#10003;</div><div class="hero-unit">COMPLETED</div><div class="hero-subject">All exams are done!</div><div class="hero-progress-bar"><div class="hero-progress-fill" style="width:100%"></div></div><div class="hero-progress-text">Exam Season ${seasonInfo}</div>${insightsHtml}`;
   else if (status === 'today') card.innerHTML = `<div class="hero-label">Next Examination</div><div class="hero-countdown">0</div><div class="hero-unit">TODAY</div><div class="hero-subject">${next.subject} ${next.paper}</div><div class="hero-date">${formatDate(next.date)}</div><div class="hero-progress-bar"><div class="hero-progress-fill" style="width:${prog.pct*100}%"></div></div><div class="hero-progress-text">Exam Season ${seasonInfo}${remains}</div>${insightsHtml}`;
   else card.innerHTML = `<div class="hero-label">Next Examination</div><div class="hero-countdown">${days}</div><div class="hero-unit">DAYS</div><div class="hero-subject">${next.subject} ${next.paper}</div><div class="hero-date">${formatDate(next.date)}</div><div class="hero-progress-bar"><div class="hero-progress-fill" style="width:${prog.pct*100}%"></div></div><div class="hero-progress-text">Exam Season ${seasonInfo}${remains}</div>${insightsHtml}`;
@@ -847,12 +878,16 @@ function renderCalendar() {
     const dateObj = new Date(year, month, d), isToday = dateObj.getTime() === today.getTime();
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const examsToday = selected.filter(e => e.date === dateStr);
+    const dayTasks = dailyTasks[dateStr] || [];
+    const hasTasks = dayTasks.length > 0;
     let cls = 'cal-day';
     if (isToday) cls += ' today';
     if (examsToday.length) cls += ' has-exam';
     if (selectedCalDate === dateStr) cls += ' selected';
+    if (hasTasks) cls += ' has-goal';
     html += `<div class="${cls}" data-date="${dateStr}">${d}`;
     if (examsToday.length) { html += `<div class="cal-dots">`; examsToday.forEach(ex => { html += `<span class="cal-dot" style="background:${getSubjectColor(ex.subject, findExamSetForPaper(ex.id))}" title="${ex.subject} ${ex.paper}"></span>`; }); html += `</div>`; }
+    else if (hasTasks) { html += `<div class="cal-dots"><span class="cal-dot" style="background:var(--success)" title="${dayTasks.length} task(s)"></span></div>`; }
     else if (!isToday && year === calDate.getFullYear() && month === calDate.getMonth()) html += `<div class="cal-no-exams-label">none</div>`;
     html += `</div>`;
   }
@@ -918,14 +953,17 @@ function renderSettings() {
   const allSubj = [...new Set(papers.map(e => e.subject))].sort();
   colorContainer.innerHTML = allSubj.map(s => `<div class="color-row"><label>${s}</label><input type="color" class="subject-color-input" data-subject="${s}" value="${getSubjectColor(s, setId)}"></div>`).join('');
 
-  // Goals
-  const goalContainer = document.getElementById('settings-goals');
-  goalContainer.innerHTML = allSubj.map(s => `<div class="goal-row" style="flex-wrap:wrap"><span style="min-width:140px;font-size:14px;font-weight:500">${s}</span><span style="font-size:12px;color:var(--text2)">${getGoals(setId, s).length ? getGoals(setId, s).filter(g => !g.completed).length + ' pending' : 'No goals'}</span></div>`).join('');
 }
 
 async function renderNotes() {
   await loadNotesCache();
   const allNotes = notesCache, container = document.getElementById('notes-list'), empty = document.getElementById('notes-empty');
+  // Populate subject dropdown
+  const subjSelect = document.getElementById('notes-upload-subject');
+  if (subjSelect) {
+    const subjects = [...new Set(getSelectedExams().map(e => e.subject))].sort();
+    subjSelect.innerHTML = '<option value="">Select subject...</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+  }
   if (!allNotes.length) { container.innerHTML = ''; empty.classList.remove('hidden'); return; }
   empty.classList.add('hidden');
   container.innerHTML = allNotes.map(n => `<div class="note-card"><div class="note-icon">&#128196;</div><div class="note-info"><div class="note-subject" style="color:${getSubjectColor(n.subject, n.examId ? findExamSetForPaper(n.examId) : null)}">${n.subject}</div><div class="note-paper">${n.paper || 'General notes'}</div><div class="note-filename">${n.filename}</div><div class="note-date">Uploaded ${new Date(n.uploadDate).toLocaleDateString('en-SG', { day:'numeric', month:'short', year:'numeric', timeZone:'Asia/Singapore' })}</div></div><div class="note-actions"><button class="btn btn-primary note-download" data-id="${n.id}">Download</button><button class="btn btn-danger note-delete" data-id="${n.id}">Delete</button></div></div>`).join('');
@@ -1089,8 +1127,8 @@ function refreshAll() {
   const subjSet = new Set(getSelectedExams().map(e => e.subject));
   filterSel.innerHTML = '<option value="">All Subjects</option>' + [...subjSet].sort().map(s => `<option value="${s}">${s}</option>`).join('');
   filterSel.value = currentVal || '';
-  renderHero(); renderStatsBar(); renderInsights();
-  renderDailyPlanner();
+  renderHero(); renderInsights();
+  renderDailyPlanner(); renderPlanWeekly();
   if (document.getElementById('goals-section').classList.contains('hidden') === false || true) {
     renderGoalsList(state.activeSetId);
   }
@@ -1225,6 +1263,13 @@ const SETUP_FLAG_KEY = 'exam_setup_complete';
       const checked = [...document.querySelectorAll('.setup-type-cb:checked')].map(cb => cb.value);
       if (!checked.length) { showToast('Select at least one exam type.'); return; }
       ensureBuiltinExams(checked);
+      // Ensure all builtin sets exist (unchecked ones stay disabled)
+      Object.keys(BUILTIN_EXAMS).forEach(key => {
+        const id = 'builtin-' + key;
+        if (!state.examSets[id]) {
+          state.examSets[id] = { name: BUILTIN_EXAMS[key].name, type: 'builtin', builtinKey: key, enabled: false, selectedIds: [], progress: {}, notes: {}, goals: {}, topics: {}, subjectColors: {} };
+        }
+      });
       document.getElementById('setup-step-1').classList.add('hidden');
       document.getElementById('setup-step-2').classList.remove('hidden');
       document.getElementById('setup-desc').textContent = 'Select your subjects for each exam.';
@@ -1302,7 +1347,7 @@ const SETUP_FLAG_KEY = 'exam_setup_complete';
   if (state.darkMode) document.documentElement.setAttribute('data-theme', 'dark');
 
   // View tabs
-  document.querySelectorAll('.view-tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active')); const view = tab.dataset.view; if (view === 'calendar') document.getElementById('calendar-view').classList.add('active'); else if (view === 'notes') { document.getElementById('notes-view').classList.add('active'); renderNotes(); } else document.getElementById('list-view').classList.add('active'); refreshAll(); }); });
+  document.querySelectorAll('.view-tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active')); const view = tab.dataset.view; if (view === 'calendar') document.getElementById('calendar-view').classList.add('active'); else if (view === 'notes') { document.getElementById('notes-view').classList.add('active'); renderNotes(); } else if (view === 'plan') document.getElementById('plan-view').classList.add('active'); else document.getElementById('list-view').classList.add('active'); refreshAll(); }); });
 
   document.querySelectorAll('.modal-close').forEach(btn => { btn.addEventListener('click', () => { const o = btn.closest('.overlay'); if (o && o.id !== 'setup-overlay') o.classList.add('hidden'); }); });
   document.querySelectorAll('.overlay').forEach(o => { o.addEventListener('click', (e) => { if (e.target === o && o.id !== 'setup-overlay') o.classList.add('hidden'); }); });
@@ -1449,6 +1494,18 @@ const SETUP_FLAG_KEY = 'exam_setup_complete';
   document.getElementById('tutorial-close').addEventListener('click', hideTutorial);
   document.getElementById('settings-show-tutorial').addEventListener('click', showTutorial);
 
+  // Notes Upload from Notes Tab
+  document.getElementById('btn-notes-upload').addEventListener('click', async () => {
+    const fileInput = document.getElementById('notes-upload-input');
+    const subjectSelect = document.getElementById('notes-upload-subject');
+    if (!fileInput.files.length) { showToast('Select a PDF file first.'); return; }
+    if (!subjectSelect.value) { showToast('Select a subject.'); return; }
+    await uploadNote(fileInput.files[0], subjectSelect.value, 'General notes', null);
+    fileInput.value = '';
+    showToast('Note uploaded!');
+    renderNotes();
+  });
+
   // Daily Planner
   loadDailyTasks();
   document.getElementById('daily-prev').addEventListener('click', () => { currentDailyDate.setDate(currentDailyDate.getDate() - 1); renderDailyPlanner(); });
@@ -1472,11 +1529,11 @@ const SETUP_FLAG_KEY = 'exam_setup_complete';
       const view = item.dataset.view;
       document.querySelectorAll('#bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
       item.classList.add('active');
-      if (view === 'daily') {
+      if (view === 'plan') {
         document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
-        document.getElementById('list-view').classList.add('active');
-        document.getElementById('daily-planner').scrollIntoView({ behavior: 'smooth' });
+        const planTab = document.querySelector('.view-tab[data-view="plan"]');
+        if (planTab) planTab.click();
       } else if (view === 'settings') {
         document.getElementById('settings-modal').classList.remove('hidden');
         renderSettings();

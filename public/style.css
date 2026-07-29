@@ -210,6 +210,14 @@ body {
 }
 .controls select:focus, .controls input[type="search"]:focus { border-color: var(--primary); }
 
+/* List view filter controls */
+.list-controls { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.list-controls select, .list-controls input[type="search"] {
+  flex: 1; min-width: 120px; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); font-size: 13px; font-family: inherit; outline: none;
+}
+.list-controls select:focus, .list-controls input[type="search"]:focus { border-color: var(--primary); }
+
 /* ===== Main Content ===== */
 #main-content { padding: 0 16px 32px; max-width: 1200px; margin: 0 auto; }
 .view-content { display: none; }
@@ -588,6 +596,23 @@ body {
   display: flex; align-items: center; gap: 16px; font-size: 14px;
 }
 
+/* ===== Plan View ===== */
+.plan-header { margin-bottom: 16px; }
+.plan-header h2 { font-size: 20px; margin-bottom: 4px; }
+.plan-header p { font-size: 14px; color: var(--text2); }
+.plan-weekly { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
+.plan-weekly h3 { font-size: 16px; margin-bottom: 12px; }
+.plan-weekly-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-bottom: 1px solid var(--surface2); cursor: pointer; transition: all var(--transition); border-radius: var(--radius-xs); }
+.plan-weekly-item:hover { background: var(--surface2); }
+.plan-weekly-item:last-child { border-bottom: none; }
+.plan-weekly-day { font-size: 11px; font-weight: 600; color: var(--text2); min-width: 36px; text-transform: uppercase; }
+.plan-weekly-subj { font-size: 13px; font-weight: 600; flex: 1; }
+.plan-weekly-paper { font-size: 12px; color: var(--text2); }
+
+/* ===== Notes Upload ===== */
+.notes-upload-area { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 16px; }
+.notes-upload-area h4 { font-size: 14px; margin-bottom: 4px; }
+
 /* ===== Login (remnants) ===== */
 .login-modal { max-width: 420px; padding: 32px; border-radius: 16px; }
 
@@ -629,14 +654,17 @@ body {
   .exam-grid { grid-template-columns: repeat(2, 1fr); }
   .controls { flex-direction: row; }
   .view-tabs { width: auto; }
-  .view-tab { flex: none; padding: 8px 16px; font-size: 13px; }
+  .view-tab { flex: 1; padding: 8px 16px; font-size: 13px; }
+  .view-tabs { width: 100%; max-width: 600px; }
   .controls-right { width: auto; margin-left: auto; }
   .controls select, .controls input[type="search"] { min-width: 140px; }
   .hero-card { padding: 32px; }
   .hero-countdown { font-size: 72px; }
   .cal-layout { flex-direction: row; }
-  .cal-sidebar { width: 280px; flex-shrink: 0; }
+  .cal-sidebar { width: 320px; flex-shrink: 0; }
   .cal-timeline { margin-top: 0; }
+  .cal-grid { padding: 12px; gap: 4px; }
+  .cal-day { min-height: 64px; font-size: 14px; padding: 6px 4px; }
   .daily-planner { padding: 20px; }
   .insight-bar { grid-template-columns: repeat(4, 1fr); }
   #bottom-nav { display: none; }
